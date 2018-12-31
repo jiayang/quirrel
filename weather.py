@@ -1,4 +1,6 @@
 from discord.ext import commands
+import discord
+
 import urllib
 import datetime
 import json
@@ -6,16 +8,16 @@ import json
 from util import location
 
 ICONS = dict()
-ICONS['clear-day'] = '☀'
-ICONS['clear-night'] = '🌛'
-ICONS['cloudy'] = '☁'
-ICONS['rain'] = '🌧'
-ICONS['snow'] = '🌨'
-ICONS['sleet'] = '🌧'
-ICONS['wind'] = '🌥'
-ICONS['fog'] = '☁'
-ICONS['partly-cloudy-day'] = '🌥'
-ICONS['partly-cloudy-night'] = '🌖'
+ICONS['clear-day'] = ('☀','https://imgur.com/nO5G8mJ.png')
+ICONS['clear-night'] = ('🌛','https://imgur.com/snxDP2E.png')
+ICONS['cloudy'] = ('☁','https://imgur.com/2DYiPx2.png')
+ICONS['rain'] = ('🌧','https://imgur.com/E38juQg.png')
+ICONS['snow'] = ('🌨','https://imgur.com/z1AcY1H.png')
+ICONS['sleet'] = ('🌧','https://imgur.com/z1AcY1H.png')
+ICONS['wind'] = ('🌥','https://imgur.com/YIAX7wm.png')
+ICONS['fog'] = ('☁','https://imgur.com/2DYiPx2.png')
+ICONS['partly-cloudy-day'] = ('🌥','https://imgur.com/2DYiPx2.png')
+ICONS['partly-cloudy-night'] = ('🌖','https://imgur.com/snxDP2E.png')
 
 WEATHER_API = "https://api.darksky.net/forecast/{}/{},{}"
 with open('secret/keys.json') as keys:
@@ -40,18 +42,19 @@ class Weather:
                 self.loc_cache[loc_name] = (now.hour,now.minute,weather['currently'])
                 print('CALLED API: DARKSKY')
                 data = self.loc_cache[loc_name][2]
-                await ctx.send(await Weather.format(data,loc_name,now))
-                await ctx.message.delete()
+            await ctx.send(embed = await Weather.format(data,loc_name,now,ctx))
+            await ctx.message.delete()
         except:
             await ctx.send('Error: Please provide a correct location. Usage: !weather {location}')
-    async def format(data,loc_name,time):
-        return "**{} at {}**\n**{}°F | {}°C\n**{} {}".format(loc_name,
-                                                                time.strftime("%I:%M %p"),
-                                                                int(round(float(data['temperature']))),
-                                                                int(round(float(await Weather.f_to_c(data['temperature'])))),
-                                                                ICONS[data['icon']],
-                                                                data['summary'])
-
+    async def format(data,loc_name,time,ctx):
+        embed = discord.Embed(title="**{} at {}**".format(loc_name,time.strftime("%I:%M %p")), color = 16744272)
+        embed.set_author(name=ctx.author.name)
+        embed.set_thumbnail(url=ICONS[data['icon']][1])
+        embed.description='**{}°F | {}°C\n**{} {}'.format(int(round(float(data['temperature']))),
+                                                        int(round(float(await Weather.f_to_c(data['temperature'])))),
+                                                        ICONS[data['icon']][0],
+                                                        data['summary'])
+        return embed
     async def f_to_c(n):
         return str((float(n)- 32) * 5. / 9)
 def setup(bot):

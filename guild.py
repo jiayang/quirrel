@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 class Guild:
 
@@ -12,5 +13,8 @@ class Guild:
         msg = await ctx.send(f"**Members Of {ctx.guild}**```md\n{members}```")
         await ctx.message.delete()
 
+    @commands.command(name='test')
+    async def _test(self,ctx):
+        pass
 def setup(bot):
     bot.add_cog(Guild(bot))
