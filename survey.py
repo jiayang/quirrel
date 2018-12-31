@@ -22,20 +22,39 @@ class Survey:
         async def gset_title(self):
             '''Sets the title of the survey'''
             sent = await self.ctx.send('**Title Of Survey?:**')
-            response = await self.bot.wait_for('message', check=self.author_check, timeout = 30)
+            response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
             self.title = response.content
             await sent.delete()
             await response.delete()
-            self.message = await self.ctx.send('━━━━━━━━━━━━━━━━\n'  + await self.format() + '\n━━━━━━━━━━━━━━━━')
+            if self.message == None:
+                self.message = await self.ctx.send(embed = await self.format())
+            else:
+                await self.message.edit(embed=await self.format())
 
         async def gset_content(self):
             '''Fills the content of the survey'''
-            sent = await self.ctx.send('**What is the question?:**')
-            response = await self.bot.wait_for('message', check=self.author_check, timeout = 30)
+            sents = [await self.ctx.send('**What is the question?:**')]
+            response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+            responses = [response]
+            while response.content.startswith('.fix'):
+                fix = await self.ctx.send('**What do you need to fix?** (title) or Type .nvm to stop fix')
+                fresponse = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                if fresponse.content == '.nvm':
+                    sent = await self.ctx.send('**What is the question?:**')
+                    sents.append(sent)
+                    response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                    responses.append(response)
+                elif fresponse.content == 'title':
+                    await self.gset_title()
+                    sent = await self.ctx.send('**What is the question?:**')
+                    sents.append(sent)
+                    response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                    responses.append(response)
+                await fix.delete()
+                await fresponse.delete()
             self.content = response.content
-            await sent.delete()
-            await response.delete()
-            await self.message.edit(content= '━━━━━━━━━━━━━━━━\n'  + await self.format() + '\n━━━━━━━━━━━━━━━━')
+            await self.ctx.channel.delete_messages(sents + responses)
+            await self.message.edit(embed=await self.format())
 
         async def gset_answers(self):
             '''Asks for the range of answers in the survey'''
@@ -45,17 +64,63 @@ class Survey:
                 if num_ans == 10:
                     break
                 sent = await self.ctx.send(f'**Choice {num_ans+1}:**') #Prompts the user
-                response = await self.bot.wait_for('message', check=self.author_check, timeout = 30) #Waits for response
+                response = await self.bot.wait_for('message', check=self.author_check, timeout = 120) #Waits for response
+                sents = [sent]
+                responses = [response]
+                while response.content.startswith('.fix'):
+                    fix = await self.ctx.send('**What do you need to fix?** (title,question,answers) or Type .nvm to stop fix')
+                    fresponse = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                    if fresponse.content == '.nvm':
+                        sent = await self.ctx.send(f'**Choice {num_ans+1}:**')
+                        sents.append(sent)
+                        response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                        responses.append(response)
+                    elif fresponse.content == 'title':
+                        await self.gset_title()
+                        sent = await self.ctx.send(f'**Choice {num_ans+1}:**')
+                        sents.append(sent)
+                        response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                        responses.append(response)
+                    elif fresponse.content == 'question':
+                        await self.gset_content()
+                        sent = await self.ctx.send(f'**Choice {num_ans+1}:**')
+                        sents.append(sent)
+                        response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                        responses.append(response)
+                    elif fresponse.content == 'answers':
+                        sent = await self.ctx.send('**Which number do you need to fix?**')
+                        sents.append(sent)
+                        response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                        responses.append(response)
+                        regret = False
+                        while (not response.content.isdigit() or (int(response.content) <= 0 or int(response.content) > num_ans)) and not regret:
+                            sent = await self.ctx.send('**Which number do you need to fix?**')
+                            response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                            if response.content == '.nvm':
+                                regret = True
+                        if not regret:
+                            await sent.delete()
+                            await response.delete()
+                            fixn = int(response.content)
+                            sent = await self.ctx.send(f'**Choice {fixn}:**')
+                            response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                            self.answers[fixn-1] = response.content
+                        await sent.delete()
+                        await response.delete()
+                        sent = await self.ctx.send(f'**Choice {num_ans+1}:**')
+                        sents.append(sent)
+                        response = await self.bot.wait_for('message', check=self.author_check, timeout = 120)
+                        responses.append(response)
+                    await fix.delete()
+                    await fresponse.delete()
                 if response.content == '.done': #If they are done, break out of the loop
-                    await sent.delete()
-                    await response.delete()
+                    await self.ctx.channel.delete_messages(sents + responses)
                     break
                 else:
                     num_ans += 1
                     self.answers += [response.content] #Else add their answer to aggregation
-                    await self.message.edit(content='━━━━━━━━━━━━━━━━\n'  + await self.format() + '\n━━━━━━━━━━━━━━━━') #Show updated preview of the survey
-                    await sent.delete()
-                    await response.delete()
+                    await self.message.edit(embed=await self.format()) #Show updated preview of the survey
+                    await self.ctx.channel.delete_messages(sents + responses)
             await prompt.delete()
 
         def author_check(self,message):
@@ -63,17 +128,17 @@ class Survey:
 
         async def format(self):
             '''Formats the string builder to the actual str sent'''
-            survey_role = discord.utils.get(self.ctx.guild.roles, name='survey')
-            survey_tag = ''
-            if survey_role != None:
-                survey_tag = survey_role.mention
-            msg = ''
-            msg += f'**{self.title}**\n'
-            if self.content != None:
-                msg += self.content + survey_tag + '\n\n'
+            embed = discord.Embed(title=f'**{self.title}**', color = 16744272)
+            ans = ''
             for i in range(len(self.answers)):
-                msg += DIGITS[i] + ' ' + self.answers[i] + '\n'
-            return msg
+                ans += DIGITS[i] + ' ' + self.answers[i] + '\n'
+            if ans == '':
+                ans = ':one: Answer goes here'
+            if self.content != None:
+                embed.add_field(name=self.content, value = ans + '\n')
+            embed.set_footer(text=f'Requested by {self.author.name} | {self.author.id}')
+            embed.set_thumbnail(url='https://imgur.com/huTrrHV.jpg')
+            return embed
 
     @commands.command(name='survey')
     async def _create_survey(self,ctx):
@@ -89,7 +154,11 @@ class Survey:
         await survey.message.delete()
         await sent.delete()
         await ctx.message.delete()
-        msg = await ctx.send(await survey.format())
+        survey_role = discord.utils.get(ctx.guild.roles, name='survey')
+        survey_tag = ''
+        if survey_role != None:
+            survey_tag = survey_role.mention
+        msg = await ctx.send(embed=await survey.format(), content = survey_tag)
         #Add reacs
         for i in range(len(survey.answers)):
             await msg.add_reaction(DIGITS[i])
