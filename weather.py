@@ -41,11 +41,12 @@ class Weather:
                 weather = json.loads(urllib.request.urlopen(WEATHER_API.format(DSKY_KEY, coords[0], coords[1])).read())
                 self.loc_cache[loc_name] = (now.hour,now.minute,weather['currently'])
                 print('CALLED API: DARKSKY')
-                data = self.loc_cache[loc_name][2]
+            data = self.loc_cache[loc_name][2]
             await ctx.send(embed = await Weather.format(data,loc_name,now,ctx))
             await ctx.message.delete()
-        except:
+        except Exception as e:
             await ctx.send('Error: Please provide a correct location. Usage: !weather {location}')
+            print(e)
     async def format(data,loc_name,time,ctx):
         embed = discord.Embed(title="**{} at {}**".format(loc_name,time.strftime("%I:%M %p")), color = 16744272)
         embed.set_author(name=ctx.author.name)
