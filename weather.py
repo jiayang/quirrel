@@ -1,6 +1,7 @@
 import urllib
 import datetime
 import json
+from pytz import timezone
 
 from discord.ext import commands
 import discord
@@ -36,7 +37,7 @@ class Weather:
         try:
             coords = location.get_coordinates(args)
             loc_name = location.get_name(args)
-            now = datetime.datetime.now()
+            now = datetime.datetime.now(timezone('EST'))
             if (loc_name not in self.loc_cache) or (self.loc_cache[loc_name][0] != now.hour or abs(self.loc_cache[loc_name][1] - now.minute) > 10):
                 weather = json.loads(urllib.request.urlopen(WEATHER_API.format(DSKY_KEY, coords[0], coords[1])).read())
                 self.loc_cache[loc_name] = (now.hour,now.minute,weather['currently'])
