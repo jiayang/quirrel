@@ -91,9 +91,6 @@ class SurveyBuilder:
                 await self.message.edit(embed=await self.format()) #Show updated preview of the survey
         await prompt.delete()
 
-    def author_check(self,message):
-        return message.author == self.author and message.channel == self.ctx.channel
-
     async def format(self):
         '''Formats the string builder to the actual str sent'''
         embed = discord.Embed(title=f'**{self.title}**', color = 16744272)
