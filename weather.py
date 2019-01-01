@@ -1,9 +1,9 @@
-from discord.ext import commands
-import discord
-
 import urllib
 import datetime
 import json
+
+from discord.ext import commands
+import discord
 
 from util import location
 

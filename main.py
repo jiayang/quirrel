@@ -1,9 +1,7 @@
 import discord
 from discord.ext import commands
 
-import importlib
-
-startup_extensions=['guild','survey','weather']
+startup_extensions=['guild','survey','weather','upburst']
 bot = commands.Bot(command_prefix='!')
 token = open('secret/token.txt','r').read().strip()
 
@@ -28,7 +26,7 @@ async def _reload(ctx, module : str):
     else:
         print('SUCCESSFULLY RELOADED: ' + module)
 
-@commands.command(name='load',hidden=True)
+@bot.command(name='load',hidden=True)
 async def _load(ctx, module : str):
     """Loads a module."""
     try:
