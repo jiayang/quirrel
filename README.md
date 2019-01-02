@@ -24,8 +24,8 @@ Copy your bot's token into `secret/token.txt`
 
 5. **Rest API keys**
 
-Get your BING MAPS API key from https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api
-Get your DarkSky API key from https://darksky.net/dev
+- Get your BING MAPS API key from https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api
+- Get your DarkSky API key from https://darksky.net/dev
 
 Enter your keys in `secret/keys.json`
 ```json
