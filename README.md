@@ -14,12 +14,12 @@ A Discord bot with super cool commands!
 
 3. **Create your own bot**
 
-Head over to https://discordapp.com/developers and create a new application.
+Head over to https://discordapp.com/developers and create a new application. <br>
 Invite the bot to your Discord server.
 
 4. **Keep your information private**
 
-Create a file `mkdir secret`
+Create a file `mkdir secret` <br>
 Copy your bot's token into `secret/token.txt`
 
 5. **Rest API keys**
