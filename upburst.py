@@ -42,7 +42,7 @@ class Upburst:
         maps = await dio.prompt(ctx,'**List off the maps being played during this battle** \nSeparate with spaces. Known nicknames: valley, peaks, pyramid',garbage)
         time = datetime.datetime.now().strftime('%m/%d/%Y')
         names = maps.content.split(' ')
-        names = ', '.join([MAPS[i] if i in MAPS else i for i in names])
+        names = ', '.join([MAPS[i] if i in MAPS else i.capitalize() for i in names])
         when = await dio.prompt(ctx,'**When?:**',garbage)
         opponent = await dio.prompt(ctx,'**Who are our enemies?:**',garbage)
         role = discord.utils.get(ctx.guild.roles, name='Esteemed Member')

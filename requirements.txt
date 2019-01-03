@@ -8,3 +8,4 @@ multidict==4.5.2
 pytz==2018.7
 websockets==6.0
 yarl==1.1.1
+-e git+https://github.com/swar/nba_api#egg=nba_api.py

@@ -1,6 +1,8 @@
 from discord.ext import commands
 import discord
 
+import asyncio
+
 class Guild:
 
     def __init__(self, bot):
@@ -22,9 +24,6 @@ class Guild:
         for arg in args:
             if arg.isdigit():
                 amount = int(arg)
-                if amount > 50:
-                    await ctx.send('The limit is 50 messages. Why would you need more?')
-                    return
                 break
         del_users = set()
         for arg in args:
@@ -50,6 +49,9 @@ class Guild:
                 nd += 1
         for msg_group in [msgs_to_delete[i:i + 100] for i in range(0, len(msgs_to_delete), 100)]:
             await ctx.channel.delete_messages(set(msg_group))
-        await ctx.send('_Woosh_ what {} messages were you talking about?'.format(amount))
+        a = await ctx.send('_Woosh_ what {} messages were you talking about?'.format(amount))
+        await asyncio.sleep(2)
+        await a.delete()
+
 def setup(bot):
     bot.add_cog(Guild(bot))
