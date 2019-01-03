@@ -21,11 +21,13 @@ class Guild:
         await ctx.message.delete()
         msgs_to_delete = []
         amount = 10
+        #If the args contain an int, use that to specify of amount of msgs to delete
         for arg in args:
             if arg.isdigit():
                 amount = int(arg)
                 break
         del_users = set()
+        #Delete msgs from specific user
         for arg in args:
             if arg.strip('<@!>').isdigit():
                 usr = self.bot.get_user(int(arg.strip('<@!>')))
@@ -34,12 +36,14 @@ class Guild:
             if usr != None:
                 nd = 0
                 async for msg in ctx.history(limit=200):
+                    #If number of deleted hits the amount wanted
                     if nd == amount:
                         break
                     if msg.author == usr:
                         msgs_to_delete.append(msg)
                         nd += 1
                 del_users.add(usr)
+        #If no user is specified, delete last msgs from anyone
         if len(del_users) == 0:
             nd = 0
             async for msg in ctx.history(limit=200):

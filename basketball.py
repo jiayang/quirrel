@@ -12,7 +12,7 @@ class Basketball:
 
 
     @commands.command(name='stats')
-    async def foo(self,ctx, *args):
+    async def _stats(self,ctx, *args):
         '''Retrieves the stats of an NBA player'''
         garbage = [ctx.message]
         bplayers = players.find_players_by_full_name(' '.join(args))
@@ -21,6 +21,7 @@ class Basketball:
             s = ' '.join([i.capitalize() for i in args])
             await ctx.send('**Player not found**: ' + s)
             return
+        #If there are many players returned from the search
         if len(bplayers) != 1:
             player = None
             list = '\n'.join([f'{i+1}. {bplayers[i]["full_name"]}' for i in range(len(bplayers))])
@@ -32,7 +33,7 @@ class Basketball:
             player = bplayers[0]
         id = player['id']
         stats = playercareerstats.PlayerCareerStats(player_id=id).career_totals_regular_season.get_dict()['data'][0]
-        print(stats)
+        # Retrieve data, format into an embed
         name = player['full_name']
         games_played = stats[3]
         min_played = round(float(stats[5]))
