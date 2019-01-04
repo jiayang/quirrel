@@ -1,3 +1,8 @@
+'''
+I am discontinuing this module because it only works locally. stats.nba.com blocks API calls from DO and AWS :(
+'''
+
+
 from discord.ext import commands
 import discord
 from nba_api.stats.endpoints import playercareerstats
