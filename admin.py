@@ -2,6 +2,8 @@ from discord.ext import commands
 import discord
 
 class Admin:
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.command(name='reload', hidden=True)
     async def _reload(self, ctx, module : str):
