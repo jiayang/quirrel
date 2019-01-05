@@ -6,8 +6,13 @@ class Admin:
         self.bot = bot
 
     @commands.command(name='reload', hidden=True)
-    async def _reload(self, ctx, module : str):
+    async def _reload(self, ctx, module : str, pull = ''):
         """Reloads a module."""
+        if pull == '-p':
+            g = git.cmd.Git('.')
+            g.pull()
+            print('Pulled from git')
+            await ctx.send('Successfully pulled from git')
         try:
             self.bot.unload_extension(module)
             self.bot.load_extension(module)
