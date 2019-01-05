@@ -15,7 +15,7 @@ async def on_ready():
 async def on_reaction_add(reaction,user):
     print(reaction.emoji)
     print(reaction.emoji.id)'''
-    
+
 @bot.command(name='reload', hidden=True)
 async def _reload(ctx, module : str):
     """Reloads a module."""
@@ -24,8 +24,10 @@ async def _reload(ctx, module : str):
         bot.load_extension(module)
     except Exception as e:
         print('{}: {}'.format(type(e).__name__, e))
+        ctx.send('{}: {}'.format(type(e).__name__, e))
     else:
         print('SUCCESSFULLY RELOADED: ' + module)
+        ctx.send(('SUCCESSFULLY RELOADED: ' + module))
 
 @bot.command(name='load',hidden=True)
 async def _load(ctx, module : str):
@@ -34,8 +36,10 @@ async def _load(ctx, module : str):
         bot.load_extension(module)
     except Exception as e:
         print('{}: {}'.format(type(e).__name__, e))
+        ctx.send('{}: {}'.format(type(e).__name__, e))
     else:
         print('SUCCESSFULLY LOADED: ' + module)
+        ctx.send('SUCCESSFULLY LOADED: ' + module)
 
 
 
