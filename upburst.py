@@ -11,6 +11,7 @@ MAPS = {
     'pyramid' : 'Pyramid Remastered',
     'ama' : 'Amazon'
 }
+UPBURST_EMOJI = '<:upburst:451133832217755659>'
 
 
 class Upburst:
@@ -59,7 +60,7 @@ class Upburst:
         s = '**Message of the week:** '+mow.content
         if mow.content == '.none':
             s = ''
-        await ctx.send(f':upburst:**Upburst Wyverns Week #{num.content}**:upburst:             {role_tag}\n_{time}_\n\n**Maps** : {names}\n**Time** : {when.content}\n**Teams** : Upburst / {opponent.content}\n**Region** : {region}\n{s}')
+        await ctx.send(f'{UPBURST_EMOJI}**Upburst Wyverns Week #{num.content}**{UPBURST_EMOJI}            {role_tag}\n_{time}_\n\n**Maps** : {names}\n**Time** : {when.content}\n**Teams** : Upburst / {opponent.content}\n**Region** : {region}\n{s}')
         await ctx.channel.delete_messages(garbage)
 
 

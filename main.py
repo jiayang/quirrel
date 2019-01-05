@@ -10,11 +10,12 @@ token = open('secret/token.txt','r').read().strip()
 async def on_ready():
     print(f"We have logged in as {bot.user}")
 
-'''For debug
-@bot.event
+#For debug
+'''@bot.event
 async def on_reaction_add(reaction,user):
-    print(reaction.emoji)'''
-
+    print(reaction.emoji)
+    print(reaction.emoji.id)'''
+    
 @bot.command(name='reload', hidden=True)
 async def _reload(ctx, module : str):
     """Reloads a module."""
