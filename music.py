@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands import Bot
 import discord
 
 class Music:
@@ -7,7 +8,7 @@ class Music:
         self.bot = bot
 
     @commands.command(name='join',)
-    async def _members(self,ctx):
+    async def _join(self,ctx):
         '''Join the voice channel'''
         await self.bot.join_voice_channel(ctx.author.voice_channel)
         await ctx.message.delete()
