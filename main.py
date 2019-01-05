@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import git
 
 startup_extensions=['admin','guild','survey','upburst','weather'] # Discontinued: basketball
 bot = commands.Bot(command_prefix='!')
