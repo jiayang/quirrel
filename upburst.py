@@ -38,7 +38,7 @@ class Upburst:
     async def _schedule(self,ctx):
         #if ctx.guild.id != 166995343249113088:
         #    return
-        garbage = []
+        garbage = [ctx.message]
         num = await dio.prompt(ctx,'**Week No.?**',garbage)
         maps = await dio.prompt(ctx,'**List off the maps being played during this battle** \nSeparate with spaces. Known nicknames: valley, peaks, pyramid',garbage)
         time = datetime.datetime.now().strftime('%m/%d/%Y')
