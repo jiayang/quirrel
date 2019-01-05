@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import git
 
 startup_extensions=['guild','survey','upburst','weather'] # Discontinued: basketball
 bot = commands.Bot(command_prefix='!')
@@ -24,22 +25,27 @@ async def _reload(ctx, module : str):
         bot.load_extension(module)
     except Exception as e:
         print('{}: {}'.format(type(e).__name__, e))
-        ctx.send('{}: {}'.format(type(e).__name__, e))
+        await ctx.send('{}: {}'.format(type(e).__name__, e))
     else:
         print('SUCCESSFULLY RELOADED: ' + module)
-        ctx.send(('SUCCESSFULLY RELOADED: ' + module))
+        await ctx.send(('SUCCESSFULLY RELOADED: ' + module))
 
 @bot.command(name='load',hidden=True)
-async def _load(ctx, module : str):
+async def _load(ctx, module : str, pull = ''):
     """Loads a module."""
+    if pull == '-p':
+        g = git.cmd.Git('.')
+        g.pull()
+        print('Pulled from git')
+        await ctx.send('Successfully pulled from git')
     try:
         bot.load_extension(module)
     except Exception as e:
         print('{}: {}'.format(type(e).__name__, e))
-        ctx.send('{}: {}'.format(type(e).__name__, e))
+        await ctx.send('{}: {}'.format(type(e).__name__, e))
     else:
         print('SUCCESSFULLY LOADED: ' + module)
-        ctx.send('SUCCESSFULLY LOADED: ' + module)
+        await ctx.send('SUCCESSFULLY LOADED: ' + module)
 
 
 
