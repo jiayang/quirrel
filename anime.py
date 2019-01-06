@@ -18,6 +18,7 @@ class Anime:
 
     @commands.command(name='anime')
     async def _anime(self, ctx, *args):
+        '''Get anime info from name. Usage: !anime <anime_name>'''
         try:
             query = "%20".join(args);
             search_res = json.loads(urlopen(SEARCH_URL + query).read())
