@@ -1,7 +1,10 @@
 from discord.ext import commands
+from discord import opus
 from discord.ext.commands import Bot
 from discord.voice_client import VoiceClient
 import discord
+
+opus.load_opus()
 
 class Music:
 
