@@ -64,7 +64,7 @@ class Guild:
         embed.add_field(name='User id:', value=str(user.id))
         embed.set_thumbnail(url=ctx.message.author.avatar_url)
         embed.set_footer(text=f'User created at {ctx.message.author.created_at}')
-
+        await ctx.message.delete()
         await ctx.send(embed = embed)
 
 def setup(bot):
