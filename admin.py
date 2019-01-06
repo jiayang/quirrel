@@ -2,6 +2,8 @@ from discord.ext import commands
 import discord
 import git
 
+import datetime
+
 class Admin:
     def __init__(self, bot):
         self.bot = bot
@@ -40,6 +42,16 @@ class Admin:
         else:
             print('SUCCESSFULLY LOADED: ' + module)
             await ctx.send('SUCCESSFULLY LOADED: ' + module)
+
+    @commands.command(name='servers', hidden=True)
+    async def _servers(self, ctx):
+        '''Lists all the servers the bot is a part of'''
+        embed = discord.Embed(title='**Servers**', color = 16744272)
+        embed.set_thumbnail(url=self.bot.avatar_url)
+        for server in self.bot.guilds:
+            embed.add_field(name=server.name,value=str(server.id))
+        await ctx.send(embed=embed)
+        await ctx.message.delete()
 
 def setup(bot):
     bot.add_cog(Admin(bot))
