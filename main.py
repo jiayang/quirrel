@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
-import git
 
-startup_extensions=['admin','guild','survey','upburst','weather'] # Discontinued: basketball
+startup_extensions=['admin','guild','survey','upburst','weather','music'] # Discontinued: basketball
 bot = commands.Bot(command_prefix='!')
 token = open('secret/token.txt','r').read().strip()
 
