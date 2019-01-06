@@ -4,6 +4,7 @@ import git
 
 import datetime
 
+DEV_IDS = [184002906981269505,178663053171228674]
 class Admin:
     def __init__(self, bot):
         self.bot = bot
@@ -11,6 +12,8 @@ class Admin:
     @commands.command(name='reload', hidden=True)
     async def _reload(self, ctx, module : str, pull = ''):
         """Reloads a module."""
+        if ctx.author.id not in DEV_IDS:
+            pass
         if pull == '-p':
             g = git.cmd.Git('.')
             g.pull()
@@ -29,6 +32,8 @@ class Admin:
     @commands.command(name='load',hidden=True)
     async def _load(self, ctx, module : str, pull = ''):
         """Loads a module."""
+        if ctx.author.id not in DEV_IDS:
+            pass
         if pull == '-p':
             g = git.cmd.Git('.')
             g.pull()
@@ -46,6 +51,8 @@ class Admin:
     @commands.command(name='servers', hidden=True)
     async def _servers(self, ctx):
         '''Lists all the servers the bot is a part of'''
+        if ctx.author.id not in DEV_IDS:
+            pass
         embed = discord.Embed(title='**Servers**', color = 16744272)
         embed.set_thumbnail(url=self.bot.user.avatar_url)
         for server in self.bot.guilds:
