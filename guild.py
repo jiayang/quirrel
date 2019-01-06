@@ -57,5 +57,15 @@ class Guild:
         await asyncio.sleep(2)
         await a.delete()
 
+    @commands.command(name='me')
+    async def _me(self, ctx):
+        user = ctx.message.author
+        embed = discord.Embed(title=f"**{user.display_name}**", colour=discord.Colour(0xd19bf1), description=user.name + "#" + str(user.discriminator))
+        embed.add_field(name='User id:', value=str(user.id))
+        embed.set_thumbnail(url=ctx.message.author.avatar_url)
+        embed.set_footer(text=f'User created at {ctx.message.author.created_at}')
+
+        await ctx.send(embed = embed)
+
 def setup(bot):
     bot.add_cog(Guild(bot))
