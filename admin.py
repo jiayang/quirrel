@@ -47,7 +47,7 @@ class Admin:
     async def _servers(self, ctx):
         '''Lists all the servers the bot is a part of'''
         embed = discord.Embed(title='**Servers**', color = 16744272)
-        embed.set_thumbnail(url=self.bot.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
         for server in self.bot.guilds:
             embed.add_field(name=server.name,value=str(server.id))
         await ctx.send(embed=embed)
