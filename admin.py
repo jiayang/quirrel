@@ -33,7 +33,7 @@ class Admin:
             print('Pulled from git')
             await ctx.send('Successfully pulled from git')
         try:
-            bot.load_extension(module)
+            self.bot.load_extension(module)
         except Exception as e:
             print('{}: {}'.format(type(e).__name__, e))
             await ctx.send('{}: {}'.format(type(e).__name__, e))
