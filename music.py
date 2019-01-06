@@ -4,7 +4,7 @@ from discord.ext.commands import Bot
 from discord.voice_client import VoiceClient
 import discord
 
-opus.load_opus('bin/libopus-0.x86.dll')
+opus.load_opus('bin/libopus-0.x64.dll')
 
 class Music:
 
