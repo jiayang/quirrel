@@ -20,9 +20,6 @@ class Admin:
             g = git.cmd.Git('.')
             g.pull()
             print('Pulled from git')
-            repo = git.Repo(os.getcwd())
-            master = repo.head.reference
-            await ctx.send(f'```**Last Commit**: {master.commit.author.name}- {master.commit.message}```')
             await ctx.send('Successfully pulled from git')
         try:
             self.bot.unload_extension(module)
