@@ -18,7 +18,7 @@ def load_opus_lib():
 
 
 if not discord.opus.is_loaded():
-discord.opus.load_opus()
+    discord.opus.load_opus()
 
 class Music:
 
