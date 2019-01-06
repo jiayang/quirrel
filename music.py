@@ -9,7 +9,7 @@ def load_opus_lib():
     if opus.is_loaded():
         return True
 
-    for opus_lib in opus_libs:
+    for opus_lib in OPUS_LIBS:
         try:
             opus.load_opus(opus_lib)
             return
