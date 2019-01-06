@@ -17,7 +17,7 @@ class Guild:
 
     @commands.command(name='clear',)
     async def _clear(self,ctx, *args):
-        '''Clears messages, max 50. You can specify a user.'''
+        '''Clears messages. You can specify a user.'''
         await ctx.message.delete()
         msgs_to_delete = []
         amount = 10
