@@ -19,9 +19,11 @@ class Survey:
         survey = SurveyBuilder.SurveyBuilder(user,ctx,self.bot)
         sent = await ctx.send(f'**Now creating survey** {user.mention}')
         #Fills in each entry of the survey
-        await survey.gset_title()
-        await survey.gset_content()
-        await survey.gset_answers()
+        if not await survey.gset_title() or not await survey.gset_content() or not await survey.gset_answers():
+            await survey.message.delete()
+            await sent.delete()
+            await ctx.message.delete()
+            return
         #Cleanup
         await survey.message.delete()
         await sent.delete()
