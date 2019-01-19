@@ -14,8 +14,7 @@ class Basketball:
 
     def __init__(self, bot):
         self.bot = bot
-
-
+        
     @commands.command(name='stats')
     async def _stats(self,ctx, *args):
         '''Retrieves the stats of an NBA player'''

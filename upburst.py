@@ -23,7 +23,7 @@ class Upburst:
     async def _roster_check(self,ctx):
         #if ctx.guild.id != 166995343249113088:
         #    return
-        garbage = []
+        garbage = [ctx.message]
         num = await dio.prompt(ctx,'**Official Roster Check No.?**',garbage)
         when = await dio.prompt(ctx,'**When?:**',garbage)
         time = datetime.datetime.now().strftime('%m/%d/%Y')
