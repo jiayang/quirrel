@@ -22,43 +22,30 @@ class SurveyBuilder:
         '''Sets the title of the survey'''
         garbage = []
         response = await dio.prompt(self.ctx,'**Title Of Survey?:**',garbage)
-        if response.content[0] == '!':
-            await self.ctx.channel.delete_messages(garbage)
-            return False
         self.title = response.content
         await self.ctx.channel.delete_messages(garbage)
         if self.message == None:
             self.message = await self.ctx.send(embed = await self.format())
         else:
             await self.message.edit(embed=await self.format())
-        return True
+
     async def gset_content(self):
         '''Fills the content of the survey'''
         garbage = []
         response = await dio.prompt(self.ctx,'**What is the question?:**',garbage)
-        if response.content[0] == '!':
-            await self.ctx.channel.delete_messages(garbage)
-            return False
         while response.content.startswith('.fix'):
             fgarbage = []
             fresponse = await dio.prompt(self.ctx,'**What do you need to fix?** (title) or Type .nvm to stop fix',fgarbage)
-            if fresponse.content[0] == '!':
-                await self.ctx.channel.delete_messages(fgarbage)
-                await self.ctx.channel.delete_messages(garbage)
-                return False
             if fresponse.content == '.nvm':
                 response = await dio.prompt(self.ctx,'**What is the question?:**',garbage)
             elif fresponse.content == 'title':
                 await self.gset_title()
                 response = await dio.prompt(self.ctx,'**What is the question?:**',garbage)
             await self.ctx.channel.delete_messages(fgarbage)
-        if response.content[0] == '!':
-            await self.ctx.channel.delete_messages(garbage)
-            return False
         self.content = response.content
         await self.ctx.channel.delete_messages(garbage)
         await self.message.edit(embed=await self.format())
-        return True
+
     async def gset_answers(self):
         '''Asks for the range of answers in the survey'''
         prompt = await self.ctx.send('**What are the answer choices?:**\n(Type .done when all choices are completed. MAX 10 answers)')
@@ -68,16 +55,9 @@ class SurveyBuilder:
                 break
             garbage = []
             response = await dio.prompt(self.ctx,f'**Choice {num_ans+1}:**',garbage) #Prompts the user
-            if response.content[0] == '!':
-                await self.ctx.channel.delete_messages(garbage)
-                return False
             while response.content.startswith('.fix'): #If they need to fix something else in the survey
                 fgarbage = []
                 fresponse = await dio.prompt(self.ctx,'**What do you need to fix?** (title,question,answers) or Type .nvm to stop fix',fgarbage) #Keep prompting them until they give valid response
-                if fresponse.content[0] == '!':
-                    await self.ctx.channel.delete_messages(fgarbage)
-                    await self.ctx.channel.delete_messages(garbage)
-                    return False
                 await self.ctx.channel.delete_messages(fgarbage)
                 if fresponse.content == '.nvm': #Cancel the fix
                     response = await dio.prompt(self.ctx,f'**Choice {num_ans+1}:**',garbage)
@@ -89,17 +69,12 @@ class SurveyBuilder:
                     response = await dio.prompt(self.ctx,f'**Choice {num_ans+1}:**',garbage)
                 elif fresponse.content == 'answers': #Fix the answer
                     qgarb = []
-                    qresponse = await dio.prompt(self.ctx,f'**Which number do you need to fix?**',qgarb) #Forces them to select a valid number
+                    response = await dio.prompt(self.ctx,f'**Which number do you need to fix?**',qgarb) #Forces them to select a valid number
                     await self.ctx.channel.delete_messages(qgarb)
                     regret = False
-                    while (not qresponse.content.isdigit() or (int(qresponse.content) <= 0 or int(qresponse.content) > num_ans)) and not regret:
-                        qresponse = await dio.prompt(self.ctx,f'**Which number do you need to fix?**',qgarb)
-                        if qresponse.content[0] == '!':
-                            await self.ctx.channel.delete_messages(qgarbage)
-                            await self.ctx.channel.delete_messages(fgarbage)
-                            await self.ctx.channel.delete_messages(garbage)
-                            return False
-                        if qresponse.content == '.nvm': #If they don't want to fix answers
+                    while (not response.content.isdigit() or (int(response.content) <= 0 or int(response.content) > num_ans)) and not regret:
+                        response = await dio.prompt(self.ctx,f'**Which number do you need to fix?**',qgarb)
+                        if response.content == '.nvm': #If they don't want to fix answers
                             regret = True
                         await self.ctx.channel.delete_messages(qgarb)
                     if not regret: #If they had an answer they wanted to fix
@@ -108,9 +83,6 @@ class SurveyBuilder:
                         self.answers[fixn-1] = response.content
                     response = await dio.prompt(self.ctx,f'**Choice {num_ans+1}:**',garbage) #Go back to original
             await self.ctx.channel.delete_messages(garbage)
-            if response.content[0] == '!':
-                await self.ctx.channel.delete_messages(garbage)
-                return False
             if response.content == '.done': #If they are done, break out of the loop
                 break
             else:
@@ -118,7 +90,6 @@ class SurveyBuilder:
                 self.answers += [response.content] #Else add their answer to aggregation
                 await self.message.edit(embed=await self.format()) #Show updated preview of the survey
         await prompt.delete()
-        return True
 
     async def format(self):
         '''Formats the string builder to the actual str sent'''
