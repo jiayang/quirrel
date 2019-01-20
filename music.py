@@ -29,11 +29,14 @@ class Music:
     @commands.command(name='join',)
     async def _join(self,ctx):
         '''Join the voice channel'''
+        voice = ""
         if ctx.author.voice.channel != None and ctx.author.voice.channel.guild == ctx.guild:
-            await ctx.author.voice.channel.connect()
+            voice = await ctx.author.voice.channel.connect()
         else:
             await ctx.send('Not in a voice channel')
         await ctx.message.delete()
+        if voice != "":
+            voice.play(discord.FFmpegPCMAudio('./test/Meek Mill - Pray For Em (44).mp3'))
 
     @commands.command(name='leave',)
     async def _leave(self,ctx):
