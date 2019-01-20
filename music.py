@@ -58,12 +58,12 @@ class Music:
     async def _play(self,ctx):
         url = (ctx.message.content.split(' ')[1]
         ydl_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': 'songs/%(title)s.%(ext)s',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
+            'format': 'bestaudio/best',
+            'outtmpl': 'songs/%(title)s.%(ext)s',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
             }],
         }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
@@ -72,11 +72,5 @@ class Music:
             ydl.download([url])
         await voice.play(discord.FFmpegPCMAudio(download_target))
         await ctx.message.delete()
-if 'entries' in result:
-    # Can be a playlist or a list of videos
-    video = result['entries'][0]
-else:
-    # Just a video
-    video = result
 def setup(bot):
     bot.add_cog(Music(bot))
