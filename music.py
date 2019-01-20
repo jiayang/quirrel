@@ -49,7 +49,7 @@ class Music:
     @commands.command(name='leave',)
     async def _leave(self,ctx):
         '''Leaves the voice channel'''
-        client = self.get_voice_client(ctx.guild)
+        client = await self.get_voice_client(ctx.guild)
         if client != None:
             await client.disconnect()
         await ctx.message.delete()
@@ -70,7 +70,7 @@ class Music:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
-        voice = self.get_voice_client(ctx.guild)
+        voice = await self.get_voice_client(ctx.guild)
         await voice.play(discord.FFmpegPCMAudio(download_target))
         await ctx.message.delete()
 def setup(bot):
