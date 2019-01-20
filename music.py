@@ -70,6 +70,7 @@ class Music:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
+        voice = get_voice_client(ctx.guild)
         await voice.play(discord.FFmpegPCMAudio(download_target))
         await ctx.message.delete()
 def setup(bot):
