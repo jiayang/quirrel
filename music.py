@@ -56,6 +56,10 @@ class Music:
 
     @commands.command(name='play',)
     async def _play(self,ctx):
+        voice = await self.get_voice_client(ctx.guild)
+        if voice == None:
+            voice = await ctx.author.voice.channel.connect()
+
         url = ctx.message.content.split(' ')[1]
         ydl_opts = {
             'format': 'bestaudio/best',
@@ -70,7 +74,6 @@ class Music:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
-        voice = await self.get_voice_client(ctx.guild)
         voice.play(discord.FFmpegPCMAudio(download_target.replace('.webm','.mp3')))
         await ctx.message.delete()
 def setup(bot):
