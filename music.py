@@ -56,7 +56,7 @@ class Music:
 
     @commands.command(name='play',)
     async def _play(self,ctx):
-        url = (ctx.message.content.split(' ')[1]
+        url = ctx.message.content.split(' ')[1]
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': 'songs/%(title)s.%(ext)s',
