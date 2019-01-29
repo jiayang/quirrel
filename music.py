@@ -67,7 +67,7 @@ class Music:
             'outtmpl': 'songs/%(title)s.%(ext)s',
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
+                'preferredcodec': 'wav',
                 'preferredquality': '192',
             }],
         }
@@ -76,7 +76,7 @@ class Music:
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
         targ = download_target.split('.')
-        targ[-1] = 'mp3'
+        targ[-1] = 'wav'
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
 def setup(bot):
     bot.add_cog(Music(bot))
