@@ -75,6 +75,8 @@ class Music:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
-        voice.play(discord.FFmpegPCMAudio(download_target[:-3] + 'mp3'))
+        targ = download_target.split('.')
+        targ[-1] = 'mp3'
+        voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
 def setup(bot):
     bot.add_cog(Music(bot))
