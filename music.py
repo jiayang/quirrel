@@ -61,6 +61,7 @@ class Music:
             voice = await ctx.author.voice.channel.connect()
 
         url = ctx.message.content.split(' ')[1]
+        await ctx.message.delete()
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': 'songs/%(title)s.%(ext)s',
@@ -75,6 +76,5 @@ class Music:
             download_target = ydl.prepare_filename(info)
             ydl.download([url])
         voice.play(discord.FFmpegPCMAudio(download_target[:-3] + 'mp3'))
-        await ctx.message.delete()
 def setup(bot):
     bot.add_cog(Music(bot))
