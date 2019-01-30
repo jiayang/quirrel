@@ -78,5 +78,6 @@ class Music:
         targ = download_target.split('.')
         targ[-1] = 'wav'
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
+        await self._leave(self,ctx)
 def setup(bot):
     bot.add_cog(Music(bot))
