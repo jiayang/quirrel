@@ -79,9 +79,6 @@ class Music:
             ydl.download([url])
         targ = download_target.split('.')
         targ[-1] = 'wav'
-        voice.play(discord.FFmpegPCMAudio('.'.join(targ)),after= self.leave(voice))
-
-    async def leave(self,voice):
-        await voice.disconnect()
+        voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
 def setup(bot):
     bot.add_cog(Music(bot))
