@@ -58,8 +58,10 @@ class Music:
     async def _play(self,ctx):
         voice = await self.get_voice_client(ctx.guild)
         if voice == None:
+            if ctx.author.voice == None:
+                await ctx.send('Not in a voice channel!')
+                return
             voice = await ctx.author.voice.channel.connect()
-
         url = ctx.message.content.split(' ')[1]
         await ctx.message.delete()
         ydl_opts = {
@@ -77,9 +79,9 @@ class Music:
             ydl.download([url])
         targ = download_target.split('.')
         targ[-1] = 'wav'
-        voice.play(discord.FFmpegPCMAudio('.'.join(targ)),after= leave(voice))
+        voice.play(discord.FFmpegPCMAudio('.'.join(targ)),after= self.leave(voice))
 
-    async def leave(voice):
+    async def leave(self,voice):
         await voice.disconnect()
 def setup(bot):
     bot.add_cog(Music(bot))
