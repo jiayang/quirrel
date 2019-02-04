@@ -23,10 +23,11 @@ if not discord.opus.is_loaded():
 
 class VoiceState:
 
-    def __init__(self,vc):
+    async def __init__(self,vc):
         while True:
             if not vc.is_playing():
                 await vc.disconnect()
+
 class Music:
 
     def __init__(self, bot):
