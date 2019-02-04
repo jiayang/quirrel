@@ -21,13 +21,6 @@ def load_opus_lib():
 if not discord.opus.is_loaded():
     load_opus_lib()
 
-class VoiceState:
-
-    async def __init__(self,vc):
-        while True:
-            if not vc.is_playing():
-                await vc.disconnect()
-
 class Music:
 
     def __init__(self, bot):
@@ -86,6 +79,11 @@ class Music:
         targ = download_target.split('.')
         targ[-1] = 'wav'
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
-        state = VoiceState(voice)
+        self.leave_on_end(voice)
+
+    async def leave_on_end(self, voice):
+        while True:
+            if not voice.is_playing():
+                await voice.disconnect()
 def setup(bot):
     bot.add_cog(Music(bot))
