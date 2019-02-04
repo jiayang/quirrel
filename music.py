@@ -79,7 +79,7 @@ class Music:
         targ = download_target.split('.')
         targ[-1] = 'wav'
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
-        self.leave_on_end(voice)
+        await self.leave_on_end(voice)
 
     async def leave_on_end(self, voice):
         while True:
