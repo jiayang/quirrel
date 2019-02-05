@@ -5,6 +5,8 @@ from discord.voice_client import VoiceClient
 import discord
 import youtube_dl
 
+import asyncio
+
 OPUS_LIBS = ['libopus-0.x86.dll', 'libopus-0.x64.dll', 'libopus-0.dll', 'libopus.so.0', 'libopus.0.dylib']
 def load_opus_lib():
     if opus.is_loaded():
@@ -81,8 +83,7 @@ class Music:
 
         loop = voice.loop
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)),
-                    after=lambda:
-                        asyncio.run_coroutine_threadsafe(voice.disconnect(), loop))
+                    after=lambda e: asyncio.run_coroutine_threadsafe(voice.disconnect(), loop))
 
 def setup(bot):
     bot.add_cog(Music(bot))
