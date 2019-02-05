@@ -27,7 +27,7 @@ class Music:
 
     def __init__(self, bot):
         self.bot = bot
-        self.channel = None
+        self.queues = dict()
 
     async def get_voice_client(self,guild):
         '''Gets the voice client for the specified guild'''
@@ -58,13 +58,13 @@ class Music:
     @commands.command(name='play',)
     async def _play(self,ctx):
         voice = await self.get_voice_client(ctx.guild)
+        await ctx.message.delete()
         if voice == None:
             if ctx.author.voice == None:
                 await ctx.send('Not in a voice channel!')
                 return
             voice = await ctx.author.voice.channel.connect()
         url = ctx.message.content.split(' ')[1]
-        await ctx.message.delete()
         ydl_opts = {
             'format': 'bestaudio/best',
             'outtmpl': 'songs/%(title)s.%(ext)s',
@@ -80,10 +80,50 @@ class Music:
             ydl.download([url])
         targ = download_target.split('.')
         targ[-1] = 'wav'
+<<<<<<< Updated upstream
 
         loop = voice.loop
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)),
                     after=lambda e: asyncio.run_coroutine_threadsafe(voice.disconnect(), loop))
+=======
+        targ = '.'.join(targ)
+
+        if voice not in self.queues:
+            self.queues[voice] = Playlist(self, voice)
+        self.queues[voice].add(targ)
+
+        if not voice.is_playing():
+            await self.queues[voice].play()
+
+
+
+class Playlist:
+
+    def __init__(self,bot,voice):
+        self.vc = voice
+        self.bot = bot
+        self.queue = []
+        self.is_checking = False
+
+    def add(self,path):
+        self.queue += [path]
+
+    async def play(self):
+        vc = self.vc
+        targ = self.queue.pop(0)
+        vc.play(discord.FFmpegPCMAudio(targ),after=self.play)
+        if not self.is_checking:
+            await self.leave_on_end()
+
+    async def leave_on_end(self):
+        self.is_checking = True
+        while True:
+            if len(self.queue) == 0 and not self.vc.is_playing():
+                await self.vc.disconnect()
+                return
+
+
+>>>>>>> Stashed changes
 
 def setup(bot):
     bot.add_cog(Music(bot))
