@@ -83,7 +83,6 @@ class Music:
         voice.play(discord.FFmpegPCMAudio('.'.join(targ)),
                     after=lambda:
                         asyncio.run_coroutine_threadsafe(voice.disconnect(), loop))
-        await self.leave_on_end(voice)
 
 def setup(bot):
     bot.add_cog(Music(bot))
