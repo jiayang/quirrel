@@ -78,12 +78,12 @@ class Music:
             ydl.download([url])
         targ = download_target.split('.')
         targ[-1] = 'wav'
-        voice.play(discord.FFmpegPCMAudio('.'.join(targ)))
+
+        loop = voice.loop
+        voice.play(discord.FFmpegPCMAudio('.'.join(targ)),
+                    after=lambda:
+                        asyncio.run_coroutine_threadsafe(voice.disconnect(), loop))
         await self.leave_on_end(voice)
 
-    async def leave_on_end(self, voice):
-        while True:
-            if not voice.is_playing():
-                await voice.disconnect()
 def setup(bot):
     bot.add_cog(Music(bot))
