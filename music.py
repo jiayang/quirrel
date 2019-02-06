@@ -111,7 +111,7 @@ class Music:
 
         s = ''
         for i in range(len(playlist.queue)):
-            s += f"{i+1}. {playlist.queue[i]['title']}"
+            s += f"{i+1}. {playlist.queue[i]['title']}\n"
 
         embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
         if playlist.vc.is_playing():
