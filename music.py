@@ -78,7 +78,7 @@ class Music:
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
             self.queues[voice] = Playlist(self, voice)
-        self.queues[voice].add(data['target'])
+        self.queues[voice].add(data)
 
         embed = discord.Embed(title=f"Queued **{data['title']}**", color = 16744272)
 
@@ -91,7 +91,13 @@ class Music:
         if not voice.is_playing():
             await self.queues[voice].play()
 
-
+    @commands.command(name='skip',)
+    async def _skip(self,ctx):
+        voice = await self.get_voice_client(ctx.guild)
+        if voice == None or not voice.is_playing():
+            ctx.send('There is nothing to skip!')
+            return
+        await self.queues[voice].skip(ctx)
 
 class Playlist:
 
@@ -101,6 +107,7 @@ class Playlist:
         self.bot = bot
         self.queue = []
         self.is_checking = False
+        self.now_playing = ''
 
     def add(self,path):
         self.queue += [path]
@@ -111,18 +118,26 @@ class Playlist:
         if len(self.queue) == 0:
             asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
             asyncio.run_coroutine_threadsafe(vc.disconnect(), self.loop)
+            self.clear()
             return
-        targ = self.queue.pop(0)
+        data = self.queue.pop(0)
+        targ = data['target']
+        self.now_playing = data['title']
         vc.play(discord.FFmpegPCMAudio(targ),
                     after= self.after)
 
     #Wait a few ms before playing the next song - prevents abrupt transitions
     def after(self,e):
-        asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
+        asyncio.run_coroutine_threadsafe(asyncio.sleep(20), self.loop)
         asyncio.run_coroutine_threadsafe(self.play(), self.loop)
 
     def clear(self):
         self.queue = []
+        self.now_playing = ''
+
+    async def skip(self,ctx):
+        await ctx.send(f'Skipped: **{self.now_playing}**')
+        self.vc.stop()
 
 def setup(bot):
     bot.add_cog(Music(bot))
