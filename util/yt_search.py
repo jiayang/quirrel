@@ -18,4 +18,9 @@ def download(message):
     targ = download_target.split('.')
     targ[-1] = 'wav'
     targ = '.'.join(targ)
-    return targ
+    data = {}
+    data['target'] = targ
+    data['title'] = info['title']
+    data['link'] = info['url']
+    data['thumbnail'] = info['thumbnails'][0]['url']
+    return data

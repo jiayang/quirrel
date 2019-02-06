@@ -73,12 +73,19 @@ class Music:
             voice = await ctx.author.voice.channel.connect()
 
         #Downloads the song
-        targ = yt_search.download(ctx.message)
+        data = yt_search.download(ctx.message)
 
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
             self.queues[voice] = Playlist(self, voice)
-        self.queues[voice].add(targ)
+        self.queues[voice].add(data['target'])
+
+        embed = discord.Embed(title=f"Queued **{data['title']}**", color = 16744272)
+
+        embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
+        embed.description = f"[Link]({data['link']})"
+        embed.set_thumbnail(url=data['thumbnail'])
+        await ctx.send(embed=embed)
 
         #If the player is not playing already, initiate the process
         if not voice.is_playing():
