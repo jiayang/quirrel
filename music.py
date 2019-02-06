@@ -81,7 +81,6 @@ class Music:
         self.queues[voice].add(data)
 
         embed = discord.Embed(title=f"Queued **{data['title']}**", color = 16744272)
-
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
         embed.description = f"[Link]({data['link']})"
         embed.set_thumbnail(url=data['thumbnail'])
@@ -95,9 +94,32 @@ class Music:
     async def _skip(self,ctx):
         voice = await self.get_voice_client(ctx.guild)
         if voice == None or not voice.is_playing():
-            ctx.send('There is nothing to skip!')
+            await ctx.send('There is nothing to skip!')
             return
         await self.queues[voice].skip(ctx)
+
+    @commands.command(name='queue',)
+    async def _queue(self,ctx):
+        voice = await self.get_voice_client(ctx.guild)
+        if voice == None:
+            await ctx.send('I am not connected to the server!')
+            return
+        playlist = self.queues[voice]
+        if len(playlist.queue) == 0 and not playlist.vc.is_playing():
+            await ctx.send('There is nothing in the queue')
+            return
+
+        s = ''
+        for i in range(len(playlist.queue)):
+            s += f"{i+1}. {playlist.queue[i]['title']}"
+
+        embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
+        if playlist.vc.is_playing():
+            embed.add_field(name='**Now Playing**', value=playlist.now_playing)
+        if s != '':
+            embed.add_field(name='**Next**', value=s)
+        embed.set_thumbnail(url=ctx.guild.icon_url)
+        await ctx.send(embed=embed)
 
 class Playlist:
 
