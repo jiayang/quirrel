@@ -23,7 +23,7 @@ def download(message):
     '''Downloads the message by first searching for the video if the message is not a link'''
     url = message.content.split(' ')[1]
     if 'youtube.com' not in url:
-        url = search(message.content.split(' ')[1])
+        url = search(url)
 
     #Search could not find anything
     if url == None:
@@ -51,7 +51,9 @@ def download(message):
 
 def search(query):
     '''Searches for the query, returns the complete link to the video'''
-    results = json.loads(urllib.request.urlopen(YT_API.format(YT_KEY, query.replace(' ','+'))).read())
+    search_url = YT_API.format(query.replace(' ','+'),YT_KEY)
+    print(search_url)
+    results = json.loads(urllib.request.urlopen(search_url).read())
     if len(results['items']) == 0:
         return None
     return YT_VIDEO_BASE.format(results['items'][0]['id']['videoId'])
