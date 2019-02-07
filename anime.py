@@ -3,10 +3,7 @@ from urllib.request import urlopen
 
 from discord.ext import commands
 import discord
-
 import asyncio
-
-
 
 SEARCH_URL = 'https://api.jikan.moe/v3/search/anime?q='
 ANIME_URL = 'https://api.jikan.moe/v3/anime/'

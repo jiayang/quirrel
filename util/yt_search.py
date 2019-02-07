@@ -1,3 +1,7 @@
+import urllib
+import datetime
+import json
+
 import youtube_dl
 
 def download(message):
@@ -24,3 +28,5 @@ def download(message):
     data['link'] = info['url']
     data['thumbnail'] = info['thumbnails'][0]['url']
     return data
+
+def search(s):

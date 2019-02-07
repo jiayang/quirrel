@@ -3,7 +3,6 @@ import os
 from discord.ext import commands
 import discord
 import git
-
 import datetime
 
 DEV_IDS = [184002906981269505,178663053171228674]
