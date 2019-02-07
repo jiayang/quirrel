@@ -59,7 +59,7 @@ class Music:
 
     @commands.command(name='play',)
     async def _play(self,ctx):
-        '''Plays the song given the url from YOUTUBE'''
+        '''Plays the song given the url from YouTube OR a search query'''
         voice = await self.get_voice_client(ctx.guild)
         await ctx.message.delete()
         #If there is no voice client in the specified guild
@@ -73,6 +73,10 @@ class Music:
         #Downloads the song
         data = yt_search.download(ctx.message)
 
+        #Could not download the video for some reason
+        if data == None:
+            await ctx.send('Sorry, I could not find that video. Proper usage: _!play search query here_  **OR**  _!play LINK_')
+            return
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
             self.queues[voice] = Playlist(self, voice)
