@@ -26,12 +26,14 @@ Copy your bot's token into `secret/token.txt`
 
 - Get your BING MAPS API key from https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api
 - Get your DarkSky API key from https://darksky.net/dev
+- Get your YouTube Search v3 key from https://console.developers.google.com/apis/dashboard
 
 Enter your keys in `secret/keys.json`
 ```json
 {
  "bing_api" : "YOUR KEY HERE",
- "dark_sky" : "YOUR KEY HERE"
+ "dark_sky" : "YOUR KEY HERE",
+ "youtube" : "YOUR KEY HERE"
 }
 ```
 6. **Run the Bot**
