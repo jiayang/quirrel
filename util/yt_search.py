@@ -21,7 +21,7 @@ YDL_OPTIONS = {
 
 def download(message):
     '''Downloads the message by first searching for the video if the message is not a link'''
-    url = message.content.split(' ')[1]
+    url = ' '.join(message.content.split(' ')[1:])
     if 'youtube.com' not in url:
         url = search(url)
 
