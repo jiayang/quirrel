@@ -71,7 +71,7 @@ class Music:
             voice = await ctx.author.voice.channel.connect()
 
         #Downloads the song
-        data = yt_search.download(ctx.message)
+        data = yt_search.download_from_message(ctx.message)
 
         #Could not download the video for some reason
         if data == None:

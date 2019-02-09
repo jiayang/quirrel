@@ -1,5 +1,6 @@
 import urllib
 import json
+from pathlib import Path
 
 import youtube_dl
 
@@ -19,12 +20,15 @@ YDL_OPTIONS = {
     }],
 }
 
-def download(message):
-    '''Downloads the message by first searching for the video if the message is not a link'''
+
+def download_from_message(message):
     url = ' '.join(message.content.split(' ')[1:])
     if 'youtube.com' not in url:
         url = search(url)
+    return download(url)
 
+def download(url):
+    '''Downloads the video specified by the URL'''
     #Search could not find anything
     if url == None:
         return None
@@ -33,14 +37,20 @@ def download(message):
         with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
-            ydl.download([url])
+
+            #Setup file name
+            targ = download_target.split('.')
+            targ[-1] = 'wav'
+            targ = '.'.join(targ)
+            config = Path(targ)
+
+            #Only download if it doesn't already exist
+            if not config.is_file():
+                ydl.download([url])
     except:
         return None
 
     #Format the data
-    targ = download_target.split('.')
-    targ[-1] = 'wav'
-    targ = '.'.join(targ)
     data = {}
     data['target'] = targ
     data['title'] = info['title']
@@ -52,7 +62,6 @@ def download(message):
 def search(query):
     '''Searches for the query, returns the complete link to the video'''
     search_url = YT_API.format(query.replace(' ','+'),YT_KEY)
-    print(search_url)
     results = json.loads(urllib.request.urlopen(search_url).read())
     if len(results['items']) == 0:
         return None
