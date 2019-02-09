@@ -21,11 +21,36 @@ YDL_OPTIONS = {
 }
 
 
-def download_from_message(message):
+def get_url(message):
     url = ' '.join(message.content.split(' ')[1:])
     if 'youtube.com' not in url:
         url = search(url)
-    return download(url)
+    return url
+
+def download_info(message):
+    url = get_url(message)
+    if url == None:
+        return None
+    try:
+        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+            info = ydl.extract_info(url, download=False)
+            download_target = ydl.prepare_filename(info)
+            #Setup file name
+            targ = download_target.split('.')
+            targ[-1] = 'wav'
+            targ = '.'.join(targ)
+    except:
+        return None
+
+    #Format the data
+    data = {}
+    data['target'] = targ
+    data['title'] = info['title']
+    data['link'] = info['url']
+    data['thumbnail'] = info['thumbnails'][0]['url']
+    data['url'] = url
+
+    return data
 
 def download(url):
     '''Downloads the video specified by the URL'''
@@ -49,15 +74,6 @@ def download(url):
                 ydl.download([url])
     except:
         return None
-
-    #Format the data
-    data = {}
-    data['target'] = targ
-    data['title'] = info['title']
-    data['link'] = info['url']
-    data['thumbnail'] = info['thumbnails'][0]['url']
-
-    return data
 
 def search(query):
     '''Searches for the query, returns the complete link to the video'''

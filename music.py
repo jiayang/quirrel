@@ -71,12 +71,12 @@ class Music:
             voice = await ctx.author.voice.channel.connect()
 
         #Downloads the song
-        data = yt_search.download_from_message(ctx.message)
-
+        data = yt_search.download_info(ctx.message)
         #Could not download the video for some reason
         if data == None:
             await ctx.send('Sorry, I could not find that video. Proper usage: _!play search query here_  **OR**  _!play LINK_')
             return
+
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
             self.queues[voice] = Playlist(self, voice)
@@ -94,7 +94,9 @@ class Music:
 
     @commands.command(name='skip',)
     async def _skip(self,ctx):
+        '''Skips the current playing song'''
         voice = await self.get_voice_client(ctx.guild)
+        await ctx.message.delete()
         if voice == None or not voice.is_playing():
             await ctx.send('There is nothing to skip!')
             return
@@ -102,7 +104,9 @@ class Music:
 
     @commands.command(name='queue',)
     async def _queue(self,ctx):
+        '''Displays the current queue'''
         voice = await self.get_voice_client(ctx.guild)
+        await ctx.message.delete()
         if voice == None:
             await ctx.send('I am not connected to the server!')
             return
@@ -132,24 +136,31 @@ class Playlist:
         self.queue = []
         self.is_checking = False
         self.now_playing = ''
+        self.last_queued = -1
 
-    def add(self,path):
-        self.queue += [path]
+    def add(self,data):
+        self.queue += [data]
+        if self.last_queued < 4:
+            yt_search.download(self.queue[self.last_queued+1]['url'])
+            self.last_queued += 1
 
     #Repeatedly play until the queue is out of songs
     async def play(self):
         vc = self.vc
-        if len(self.queue) == 0:
+        if self.last_queued == -1:
             asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
             asyncio.run_coroutine_threadsafe(vc.disconnect(), self.loop)
             self.clear()
             return
         data = self.queue.pop(0)
+        self.last_queued -= 1
         targ = data['target']
         self.now_playing = data['title']
         vc.play(discord.FFmpegPCMAudio(targ),
                     after= self.after)
-
+        if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
+            yt_search.download(self.queue[self.last_queued+1]['url'])
+            self.last_queued += 1
     #Wait a few ms before playing the next song - prevents abrupt transitions
     def after(self,e):
         asyncio.run_coroutine_threadsafe(asyncio.sleep(20), self.loop)
