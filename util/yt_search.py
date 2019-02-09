@@ -20,13 +20,14 @@ YDL_OPTIONS = {
     }],
 }
 
-
+#Searches for the url
 def get_url(message):
     url = ' '.join(message.content.split(' ')[1:])
     if 'youtube.com' not in url:
         url = search(url)
     return url
 
+#Download the info only
 def download_info(message):
     url = get_url(message)
     if url == None:
