@@ -16,7 +16,7 @@ class Rand:
             await ctx.send('💙 **Heads!**')
         else:
             await ctx.send('❤ **Tails!**')
-
+        await ctx.message.delete()
 
 def setup(bot):
     bot.add_cog(Rand(bot))
