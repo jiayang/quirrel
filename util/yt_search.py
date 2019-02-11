@@ -23,6 +23,8 @@ YDL_OPTIONS = {
 #Searches for the url
 def get_url(message):
     url = ' '.join(message.content.split(' ')[1:])
+    if '&list=' in url:
+        return None
     if 'youtube.com' not in url:
         url = search(url)
     return url
