@@ -47,7 +47,7 @@ class Music:
             await ctx.send('Not in a voice channel')
         await ctx.message.delete()
 
-    @commands.command(name='leave',)
+    @commands.command(name='leave', aliases = ['stop'])
     async def _leave(self,ctx):
         '''Leaves the voice channel'''
         client = await self.get_voice_client(ctx.guild)
@@ -81,7 +81,7 @@ class Music:
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
             self.queues[voice] = Playlist(self, voice)
-        self.queues[voice].add(data)
+        self.queues[voice].add(data['entries'][0])
 
         embed = discord.Embed(title=f"Queued **{data['title']}**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
@@ -92,6 +92,9 @@ class Music:
         #If the player is not playing already, initiate the process
         if not voice.is_playing():
             await self.queues[voice].play()
+
+        for entry in data['entries'][1:]:
+            self.queues[voice].add(entry)
 
     @commands.command(name='skip',)
     async def _skip(self,ctx):
@@ -144,7 +147,7 @@ class Playlist:
     def add(self,data):
         self.queue += [data]
         if self.last_queued < 4:
-            yt_search.download(self.queue[self.last_queued+1]['url'])
+            asyncio.run_coroutine_threadsafe(yt_search.download(self.queue[self.last_queued+1]['url']), self.loop)
             self.last_queued += 1
 
     #Repeatedly play until the queue is out of songs
