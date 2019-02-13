@@ -70,7 +70,7 @@ class Admin:
             'listening' : discord.ActivityType.listening,
             'watching' : discord.ActivityType.watching
         }
-        activity = discord.Activity(type=types[arg[0]], name=' '.join(args[1:]))
+        activity = discord.Activity(type=types[args[0]], name=' '.join(args[1:]))
         await bot.change_presence(activity=activity)
 
 def setup(bot):
