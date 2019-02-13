@@ -190,7 +190,7 @@ class Playlist:
     #Wait a few ms before playing the next song - prevents abrupt transitions
     def after(self,e):
         if len(self.vc.channel.members) == 1:
-            await self.vc.disconnect()
+            asyncio.run_coroutine_threadsafe(self.vc.disconnect(), self.loop)
             return
         asyncio.run_coroutine_threadsafe(asyncio.sleep(20), self.loop)
         asyncio.run_coroutine_threadsafe(self.play(), self.loop)
