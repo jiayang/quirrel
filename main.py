@@ -11,8 +11,16 @@ async def on_ready():
     print(f"We have logged in as {bot.user}")
 
     #Custom playing status
-    game = discord.Game("near the Blue Lake")
-    await bot.change_presence(activity=game)
+
+    #DEFAULT
+    #activity = discord.Game("near the Blue Lake")
+
+    #FROZEN
+    activity = discord.Activity()
+    activity.type = discord.ActivityType.listening
+    activity.name = 'Vuelie'
+    activity.large_image_url = 'https://i.imgur.com/rzZEftR.jpg'
+    await bot.change_presence(activity=activity)
 
 if __name__ == '__main__':
     for extension in startup_extensions:

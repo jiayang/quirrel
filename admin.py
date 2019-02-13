@@ -61,5 +61,17 @@ class Admin:
         await ctx.send(embed=embed)
         await ctx.message.delete()
 
+    @commands.command(name='presence', hidden=True)
+    async def _change_presence(self,ctx,*args):
+        '''Change the presence of the bot. Usage: !presence [TYPE] [MESSAGE_TO_BE_SHOWN]'''
+        types = {
+            'playing' : discord.ActivityType.playing,
+            'streaming' : discord.ActivityType.streaming,
+            'listening' : discord.ActivityType.listening,
+            'watching' : discord.ActivityType.watching
+        }
+        activity = discord.Activity(type=types[arg[0]], name=' '.join(args[1:]))
+        await bot.change_presence(activity=activity)
+
 def setup(bot):
     bot.add_cog(Admin(bot))
