@@ -71,7 +71,7 @@ class Admin:
             'watching' : discord.ActivityType.watching
         }
         activity = discord.Activity(type=types[args[0]], name=' '.join(args[1:]))
-        await bot.change_presence(activity=activity)
+        await self.bot.change_presence(activity=activity)
 
 def setup(bot):
     bot.add_cog(Admin(bot))
