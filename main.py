@@ -18,8 +18,7 @@ async def on_ready():
     #FROZEN
     activity = discord.Activity()
     activity.type = discord.ActivityType.listening
-    activity.name = 'Vuelie'
-    activity.large_image_url = 'https://i.imgur.com/rzZEftR.jpg'
+    activity.name = 'an angel sing Vuelie'
     await bot.change_presence(activity=activity)
 
 if __name__ == '__main__':
