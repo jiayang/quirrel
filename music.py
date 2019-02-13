@@ -71,17 +71,15 @@ class Music:
             voice = await ctx.author.voice.channel.connect()
 
         #Downloads the song's info
-        data = yt_search.download_info(ctx.message)
+        urls = yt_search.get_urls(ctx.message)
 
         #Could not download the info for some reason
-        if data == None:
+        if urls == None:
             await ctx.send('Sorry, I could not find that video. Proper usage: _!play search query here_  **OR**  _!play LINK_')
             return
 
-        #If the playlist exists for the selected server, just add the song to the playlist
-        if voice not in self.queues:
-            self.queues[voice] = Playlist(self, voice)
-        self.queues[voice].add(data['entries'][0])
+        #Display the message
+        data = yt_search.download_info(urls)
 
         embed = discord.Embed(title=f"Queued **{data['title']}**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
@@ -89,12 +87,22 @@ class Music:
         embed.set_thumbnail(url=data['thumbnail'])
         await ctx.send(embed=embed)
 
+
+
+        #If the playlist exists for the selected server, just add the song to the playlist
+        if voice not in self.queues:
+            self.queues[voice] = Playlist(self, voice)
+
+        #Get the first video playing, while the others download in the background
+        self.queues[voice].add(urls[0])
+
         #If the player is not playing already, initiate the process
         if not voice.is_playing():
             await self.queues[voice].play()
 
-        for entry in data['entries'][1:]:
-            self.queues[voice].add(entry)
+        #Add the rest of the videos to the queue
+        for url in urls[1:]:
+            self.queues[voice].add(url)
 
     @commands.command(name='skip',)
     async def _skip(self,ctx):
@@ -129,7 +137,7 @@ class Music:
             s += f"{i+1}. {playlist.queue[i]['title']}\n"
         embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
         if playlist.vc.is_playing():
-            embed.add_field(name='**Now Playing**', value=playlist.now_playing)
+            embed.add_field(name='**Now Playing**', value=playlist.now_playing + '\n')
         if s != '':
             embed.add_field(name='**Next**', value=s)
         embed.set_thumbnail(url=ctx.guild.icon_url)
@@ -147,7 +155,10 @@ class Playlist:
     def add(self,data):
         self.queue += [data]
         if self.last_queued < 4:
-            asyncio.run_coroutine_threadsafe(yt_search.download(self.queue[self.last_queued+1]['url']), self.loop)
+            if 'snippet' in data and 'resourceId' in data['snippet']:
+                self.queue[-1] = yt_search.download(data['snippet']['resourceId']['videoId'])
+            else:
+                self.queue[-1] = yt_search.download(data['id']['videoId'])
             self.last_queued += 1
 
     #Repeatedly play until the queue is out of songs
@@ -170,7 +181,10 @@ class Playlist:
 
         #If there are songs left to queue and not all the spots have already been taken, queue the song
         if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
-            yt_search.download(self.queue[self.last_queued+1]['url'])
+            if 'snippet' in self.queue[self.last_queued + 1] and 'resourceId' in self.queue[self.last_queued + 1]['snippet']:
+                self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
+            else:
+                self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
             self.last_queued += 1
 
     #Wait a few ms before playing the next song - prevents abrupt transitions
