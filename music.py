@@ -154,7 +154,7 @@ class Music:
         s.replace('_','\_')
         embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
         if playlist.vc.is_playing():
-            embed.add_field(name='**Now Playing**', value=playlist.now_playing + '\n')
+            embed.add_field(name='**Now Playing**', value=playlist.now_playing['title'] + '\n')
         if s != '':
             embed.add_field(name='**Next**', value=s)
         embed.set_thumbnail(url=ctx.guild.icon_url)
@@ -209,7 +209,7 @@ class Playlist:
         data = self.queue.pop(0)
         self.last_queued -= 1
         targ = data['target']
-        self.now_playing = data['title']
+        self.now_playing = data
         vc.play(discord.FFmpegPCMAudio(targ),
                     after= self.after)
 
@@ -240,7 +240,11 @@ class Playlist:
 
     #Skips the currently playing by just calling stop
     async def skip(self,ctx):
-        await ctx.send(f'Skipped: **{self.now_playing}**')
+        embed = discord.Embed(title=f"Queued **{self.now_playing['title']}**", color = 16744272)
+        embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
+        embed.description = f"[Link]({self.now_playing['url']})"
+        embed.set_thumbnail(url=data['thumbnail'])
+        await ctx.send(embed=embed)
 
         #Stop triggers the 'after' function which plays the next song
         self.vc.stop()
