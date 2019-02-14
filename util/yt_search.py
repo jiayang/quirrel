@@ -109,6 +109,7 @@ def download(vid):
             data['target'] = targ
             data['url'] = url
             data['title'] = info['title']
+            data['downloaded'] = True
 
             #DIAGNOSTIC print statements (WOOHOO)
             print(f'Downloading: {info["title"]}')

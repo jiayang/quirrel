@@ -1,3 +1,5 @@
+import random
+
 import asyncio
 from discord.ext import commands
 from discord import opus
@@ -133,8 +135,23 @@ class Music:
 
         #Format the embed for FANCY return
         s = ''
-        for i in range(len(playlist.queue)):
-            s += f"{i+1}. {playlist.queue[i]['title']}\n"
+        i = 0
+        while i < len(playlist.queue):
+            name = ''
+            if playlist.queue[i] == None:
+                playlist.queue.pop(i)
+                continue
+            if 'title' in playlist.queue[i]:
+                name = playlist.queue[i]['title']
+            else:
+                name = playlist.queue[i]['snippet']['title']
+            s += f"**{i+1}**. {name}\n"
+            if i == 19 or len(s) > 900:
+                l = len(playlist.queue) - i
+                s += f'And {l} more...'
+                break
+            i += 1
+        s.replace('_','\_')
         embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
         if playlist.vc.is_playing():
             embed.add_field(name='**Now Playing**', value=playlist.now_playing + '\n')
@@ -142,6 +159,18 @@ class Music:
             embed.add_field(name='**Next**', value=s)
         embed.set_thumbnail(url=ctx.guild.icon_url)
         await ctx.send(embed=embed)
+
+    @commands.command(name='shuffle',)
+    async def _shuffle(self,ctx):
+        '''Shuffles the current queue'''
+        voice = await self.get_voice_client(ctx.guild)
+        await ctx.message.delete()
+        if voice == None:
+            await ctx.send('I am not connected to the server!')
+            return
+
+        playlist = self.queues[voice]
+        await playlist.shuffle(ctx)
 
 class Playlist:
 
@@ -154,11 +183,16 @@ class Playlist:
     #Adds the song's data to the queue, downloads the song if there are less than 5 songs left in the queue that are already downloaded
     def add(self,data):
         self.queue += [data]
-        if self.last_queued < 4:
-            if 'snippet' in data and 'resourceId' in data['snippet']:
-                self.queue[-1] = yt_search.download(data['snippet']['resourceId']['videoId'])
-            else:
-                self.queue[-1] = yt_search.download(data['id']['videoId'])
+        self.attempt_download()
+
+    #Attempts to download the song
+    def attempt_download(self):
+        if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
+            if 'downloaded' not in self.queue[self.last_queued + 1]:
+                if 'snippet' in self.queue[self.last_queued + 1] and 'resourceId' in self.queue[self.last_queued + 1]['snippet']:
+                    self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
+                else:
+                    self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
             self.last_queued += 1
 
     #Repeatedly play until the queue is out of songs
@@ -180,20 +214,23 @@ class Playlist:
                     after= self.after)
 
         #If there are songs left to queue and not all the spots have already been taken, queue the song
-        if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
-            if 'snippet' in self.queue[self.last_queued + 1] and 'resourceId' in self.queue[self.last_queued + 1]['snippet']:
-                self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
-            else:
-                self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
-            self.last_queued += 1
+        self.attempt_download()
 
     #Wait a few ms before playing the next song - prevents abrupt transitions
     def after(self,e):
         if len(self.vc.channel.members) == 1:
             asyncio.run_coroutine_threadsafe(self.vc.disconnect(), self.loop)
             return
-        asyncio.run_coroutine_threadsafe(asyncio.sleep(20), self.loop)
+        asyncio.run_coroutine_threadsafe(asyncio.sleep(50), self.loop)
         asyncio.run_coroutine_threadsafe(self.play(), self.loop)
+
+    #Shuffles the queue
+    async def shuffle(self,ctx):
+        random.shuffle(self.queue)
+        await ctx.send('**Shuffled** the queue, enjoy!')
+        self.last_queued = -1
+        for i in range(5):
+            self.attempt_download()
 
     #Clears everything for future use
     def clear(self):
