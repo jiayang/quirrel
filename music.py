@@ -93,7 +93,7 @@ class Music:
 
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
-            self.queues[voice] = Playlist(self, voice)
+            self.queues[voice] = Playlist(self.bot, voice)
 
         #Get the first video playing, while the others download in the background
         self.queues[voice].add(urls[0])
@@ -240,10 +240,10 @@ class Playlist:
 
     #Skips the currently playing by just calling stop
     async def skip(self,ctx):
-        embed = discord.Embed(title=f"Queued **{self.now_playing['title']}**", color = 16744272)
+        embed = discord.Embed(title=f"Skipped **{self.now_playing['title']}**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
         embed.description = f"[Link]({self.now_playing['url']})"
-        embed.set_thumbnail(url=data['thumbnail'])
+        embed.set_thumbnail(url=self.now_playing['thumbnail'])
         await ctx.send(embed=embed)
 
         #Stop triggers the 'after' function which plays the next song
