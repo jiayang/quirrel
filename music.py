@@ -240,7 +240,7 @@ class Playlist:
 
     #Skips the currently playing by just calling stop
     async def skip(self,ctx):
-        embed = discord.Embed(title=f"Skipped **{self.now_playing['title']}**", color = 16744272)
+        embed = discord.Embed(title=f"Skipped **{self.now_playing['title']}**", color = 32943)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
         embed.description = f"[Link]({self.now_playing['url']})"
         embed.set_thumbnail(url=self.now_playing['thumbnail'])
