@@ -75,7 +75,7 @@ class Connect_Four:
         #Embed for the UX
         embed = discord.Embed(title="**Connect Four: Blue's Turn**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
-        embed.description = f"[Rules](http://www.boardgamecapital.com/connect-four-rules.htm)"
+        embed.description = f"[Rules](http://www.boardgamecapital.com/connect-four-rules.htm) To place a piece, add a reaction to the corresponding column."
         embed.set_thumbnail(url='https://i.imgur.com/SIzZAzP.jpg')
         self.embed = embed
         self.embed_message = await ctx.send(embed=embed)
@@ -108,15 +108,20 @@ class Connect_Four:
         if check == 2:
             self.embed.title = "**Connect Four: Red Wins!**"
             del self.games.games[self.io.id]
+        if check == -1:
+            self.embed.title = "**Connect Four: Draw!**"
+            del self.games.games[self.io.id]
         await self.embed_message.edit(embed=self.embed)
 
     async def check_win(self):
         #Checks for wins by iterating through every direction for every piece
+        count = 0
         for i in range(len(self.board)):
             for j in range(len(self.board[i])):
                 v = self.board[i][j]
                 if v == 0:
                     continue
+                count += 1
                 for vector in BASIS_VECTORS:
                     m = 1
                     dr = vector[0]
@@ -129,7 +134,8 @@ class Connect_Four:
                         newc = j + dc * m
                         if m == 4:
                             return v
-
+        if count == 42:
+            return -1
 
     def format_list(self,row):
         #Returns a string used for displaying to users
