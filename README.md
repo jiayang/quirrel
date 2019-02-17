@@ -2,7 +2,12 @@
 
 A Discord bot with super cool commands!
 
-## Running
+## Add to your server
+To add this bot to your server, click here and follow the instructions! 
+https://discordapp.com/api/oauth2/authorize?client_id=528275565434896394&permissions=37088320&scope=bot
+
+
+## Self Download (not recommended)
 
 1. **Clone the repo**
 
