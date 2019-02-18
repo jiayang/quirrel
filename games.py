@@ -66,7 +66,11 @@ class Connect_Four:
             row = [0,0,0,0,0,0,0]
             self.board.append(row)
             to_send = self.format_list(row)
+        for i in range(2):
+            to_send = ''
             #Store the messages
+            for j in range(3):
+                to_send += self.format_list(self.board[i * 3 + j]) + '\n'
             self.messages.append(await ctx.send(to_send))
         self.io = self.messages[-1]
         for i in range(7):
@@ -85,8 +89,9 @@ class Connect_Four:
         n = REVERSE_DIGITS[reaction.emoji] #The number represented by the rxn
         place = None #Figure out which place the new piece should go
         for i in range(6):
-            if self.board[i][n] == 0:
-                place = i
+            if self.board[5-i][n] == 0:
+                place = 5-i
+                break
         if place == None:
             return None
 
@@ -99,7 +104,10 @@ class Connect_Four:
 
         self.turn = not self.turn #Flip the turns
 
-        await self.messages[place].edit(content=self.format_list(self.board[place])) #Edit the board shown
+        to_send = ''
+        for i in range(3):
+            to_send += self.format_list(self.board[((place // 3) * 3 + i)]) + '\n'
+        await self.messages[place // 3].edit(content=to_send) #Edit the board shown
 
         check = await self.check_win() #Check to see if anyone has won
         if check == 1:
@@ -143,7 +151,9 @@ class Connect_Four:
         s = '    '.join(row)
         return s.replace('2',PIECE['red']).replace('1',PIECE['blue']).replace('0',PIECE['empty'])
 
-
+    def print_board(self):
+        l = [str(e) for e in self.board]
+        print('\n'.join(l) + '\n')
 
 
 

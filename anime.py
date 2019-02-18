@@ -32,6 +32,7 @@ class Anime:
             await ctx.send(embed = embed)
 
         except:
+            print(e)
             await ctx.send('API error, try again')
         await ctx.message.delete()
 def setup(bot):
