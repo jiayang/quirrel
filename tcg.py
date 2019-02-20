@@ -88,12 +88,12 @@ class CardGame:
         market = cards_db.market_cards()
         if int(card['id']) not in market:
             return int(card['value'])
-        return round(int(card['value']) * math.pow(1.03,market[int(card['id'])]//10))
+        return round(int(card['value']) * math.pow(1.005,market[int(card['id'])]))
     def sell_value(card):
         market = cards_db.market_cards()
         if int(card['id']) not in market:
             return int(card['value'])
-        return round(int(card['value']) * math.pow(0.97,market[int(card['id'])]//10))
+        return round(int(card['value']) * math.pow(0.995,market[int(card['id'])]))
 #===============================================
 
     @commands.command(name='market',)
