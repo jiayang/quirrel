@@ -52,7 +52,7 @@ class CardGame:
             await ctx.send('Please enter a valid card pack!\nCurrent availible packs: Wood, Iron, Gold')
             return
         if PACKS[pack] > balance:
-            await ctx.send(f'You can not afford the {pack} pack! \nThe pack costs {PACKS[pack]}, but you only have {balance}.')
+            await ctx.send(f'You can not afford the {pack} pack! \nThe pack costs {PACKS[pack]} Big Bucks, but you only have {balance}.')
             return
 
         #Opens the pack
@@ -136,13 +136,13 @@ class CardGame:
             return
         balance = cards_db.get_balance(id)
         if arg1 > balance:
-            await ctx.send('You do not have enough money!')
+            await ctx.send('You do not have enough Big Bucks!')
             return
         #Update balances
         cards_db.update_balance(id,balance - arg1)
         balance1 = cards_db.get_balance(usr1.id)
         cards_db.update_balance(usr1.id,balance1 + arg1)
-        await ctx.send(f"Successfully gave {arg1} to {arg0}!")
+        await ctx.send(f"Successfully gave {arg1} Big Bucks to {arg0}!")
 
     async def on_message(self,ctx):
         #Update a dictionary every message, gaining xp every minute
@@ -151,7 +151,7 @@ class CardGame:
         if id in self.times:
             if datetime.datetime.utcnow() - self.times[id] > datetime.timedelta(minutes=1):
                 balance = cards_db.get_balance(id)
-                cards_db.update_balance(id,balance + random.randint(10,15))
+                cards_db.update_balance(id,balance + random.randint(20,40))
                 self.times[id] = datetime.datetime.utcnow()
         else:
             self.times[id] = datetime.datetime.utcnow()
