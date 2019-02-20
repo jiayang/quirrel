@@ -109,6 +109,17 @@ class CardGame:
         embed.description = f"Sold the card for {card_info['value']} Big Bucks."
         await ctx.send(embed=embed)
 
+    @commands.command(name='value')
+    async def _value(self,ctx,arg):
+        card_info = cards.get_card(arg)
+        if card_info == None:
+            await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
+            return
+        embed = discord.Embed(title=f"**{card_info['name']}**", color = 15834065)
+        embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.description = f"{card_info['name']} is a {card_info['rarity']} and currently worth {card_info['value']}."
+        await ctx.send(embed=embed)
+
     @commands.command(name='cards',)
     @commands.check(has_account)
     async def _cards(self,ctx,arg0: int = 1):
@@ -170,7 +181,7 @@ class CardGame:
     @commands.command(name='trade',)
     @commands.check(has_account)
     async def _trade(self,ctx,arg0):
-        '''Pay someone money'''
+        '''Trade cards with other people'''
         id = ctx.author.id
         #Get the other user
         usr1 = self.bot.get_user(id=int(arg0.strip('!<@').strip('>')))
