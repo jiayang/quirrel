@@ -44,7 +44,7 @@ class CardGame:
         self.bot = bot
         self.times = dict()
 
-    @commands.command(name='balance',)
+    @commands.command(name='balance',aliases = ['bal'])
     @commands.check(has_account)
     async def _balance(self,ctx):
         '''Displays the balance of the user'''
