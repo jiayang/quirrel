@@ -98,6 +98,10 @@ def name(id):
     return CARDS[int(id)]['name']
 
 def get_card(name):
+    if str(name).isdigit():
+        if int(name) not in CARDS:
+            return None
+        return CARDS[int(name)]
     if name.lower().strip() not in CARDS:
         return None
     return CARDS[name.lower().strip()]

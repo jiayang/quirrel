@@ -84,11 +84,63 @@ def remove_card(id,card_id):
     #Add back n-1 of those cards
     add_cards(id, [card_id] * (count - 1))
 
+def market_cards():
+    '''Returns all the cards currently in the market'''
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    command = "SELECT * FROM market;"
+    c.execute(command)
+    cards = c.fetchall()
+    db.close()
 
+    d = dict()
+    #print(cards)
+    for card in cards:
+        d[card[0]] = card[1]
+    return d
 
+def add_to_market(card_id):
+    '''Adds a card to the market'''
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
 
+    #See if it is already in the market
+    command = "SELECT card_id,amount FROM market WHERE card_id = ?;"
+    c.execute(command,(card_id,))
 
+    resp = c.fetchall()
+    #It never existed
+    if resp == []:
+        command = "INSERT INTO market (card_id,amount) VALUES (?,1);"
+        c.execute(command,(card_id,))
+    else:
+        amount = resp[0][1]
+        amount += 1
 
+        command = "UPDATE market SET amount=? WHERE card_id=?;"
+        c.execute(command,(amount,card_id))
+    db.commit()
+    db.close()
+
+def remove_from_market(card_id):
+    '''Removes a copy of the card from the market'''
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+
+    command = "SELECT * FROM market WHERE card_id = ?;"
+    c.execute(command,(card_id,))
+
+    resp = c.fetchall()
+    amount = resp[0][1]
+
+    if amount == 1:
+        command = "DELETE FROM market WHERE card_id = ?;"
+        c.execute(command,(card_id,))
+    else:
+        command = "UPDATE market SET amount=? WHERE card_id=?;"
+        c.execute(command,(amount-1,card_id))
+    db.commit()
+    db.close()
 
 
 
@@ -118,8 +170,9 @@ def remove_card(id,card_id):
 db = sqlite3.connect(DB_FILE)
 c = db.cursor()
 commands = []
-commands += ["CREATE TABLE IF NOT EXISTS users(id TEXT, balance INTEGER)"]
-commands += ["CREATE TABLE IF NOT EXISTS cards(id TEXT, card_id INTEGER)"]
+commands += ["CREATE TABLE IF NOT EXISTS users(id TEXT, balance INTEGER);"]
+commands += ["CREATE TABLE IF NOT EXISTS cards(id TEXT, card_id INTEGER);"]
+commands += ["CREATE TABLE IF NOT EXISTS market(card_id INTEGER, amount INTEGER);"]
 for command in commands:
     c.execute(command)
 db.commit()

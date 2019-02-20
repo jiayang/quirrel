@@ -1,4 +1,5 @@
 import random
+import math
 
 from discord.ext import commands
 import discord
@@ -27,6 +28,7 @@ trades = dict() #Channel -> TradeUnit
 currently_trading = set()
 
 async def trade_valid(ctx):
+    #Checks if the trade command was typed in a valid channel
     if ctx.channel not in trades:
         await ctx.send('Not in a valid trade chat')
         return False
@@ -81,6 +83,73 @@ class CardGame:
         embed.add_field(name='**Cards**', value= card_names)
         await ctx.send(embed=embed)
 
+#=============================================== Market values
+    def buy_value(card):
+        market = cards_db.market_cards()
+        if int(card['id']) not in market:
+            return int(card['value'])
+        return round(int(card['value']) * math.pow(1.03,market[int(card['id'])]//10))
+    def sell_value(card):
+        market = cards_db.market_cards()
+        if int(card['id']) not in market:
+            return int(card['value'])
+        return round(int(card['value']) * math.pow(0.97,market[int(card['id'])]//10))
+#===============================================
+
+    @commands.command(name='market',)
+    async def _market_show(self,ctx,arg0: int = 1):
+        '''Display the cards currently in the market'''
+        market = cards_db.market_cards()
+        count = len(market)
+        #Pagination
+        if arg0 <= 0 or (count // 10) + 1 < arg0:
+            await ctx.send(f'Invalid Page requested: {arg0}')
+        #Stylistic and Discord embed limits, so paginate cards
+        card_names = ''
+        keys = list(market.keys())[(arg0-1) * 10 : (arg0-1) * 10 + 10]
+        for key in keys:
+            card = cards.get_card(key)
+            card_names += cards.format_string(card) + f' x{market[key]}\n'
+        embed = discord.Embed(title="**Market**", color = 16744272)
+        embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
+        if card_names == '':
+            embed.add_field(name='**Cards**', value= "There are no cards in the market.")
+        else:
+            embed.add_field(name='**Cards**', value= card_names)
+        embed.set_footer(text=f"Showing page {arg0} of {count//10 + 1}")
+        await ctx.send(embed=embed)
+
+    @commands.command(name='market-buy',)
+    async def _market_buy(self,ctx,arg):
+        '''Buy a card from the market'''
+        id = ctx.author.id
+        card_info = cards.get_card(arg)
+        market = cards_db.market_cards()
+        #The card does not exist
+        if card_info == None:
+            await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
+            return
+        #Check if the market has the card
+        if int(card_info['id']) not in market:
+            await ctx.send(f"The market doesn't seem to have a copy of {card_info['name']}.")
+            return
+        if id in currently_trading:
+            await ctx.send(f"You are currently trading. Please complete the trade to buy from the market.")
+            return
+        buy_val = CardGame.buy_value(card_info)
+        balance = cards_db.get_balance(id)
+        if buy_val > balance:
+            await ctx.send(f"You can't afford {card_info['name']}! It costs {buy_val} Big Bucks, but you only have {balance}")
+            return
+        cards_db.remove_from_market(card_info['id'])
+        cards_db.add_cards(id,[card_info['id']])
+        cards_db.update_balance(id,balance-buy_val)
+        embed = discord.Embed(title=f"💰 Bought: **{card_info['name']}** 💰", color = 15834065)
+        embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.description = f"Bought the card for {buy_val} Big Bucks."
+        await ctx.send(embed=embed)
+
+
     @commands.command(name='sell',)
     @commands.check(has_account)
     async def _sell(self,ctx,arg):
@@ -100,24 +169,29 @@ class CardGame:
             await ctx.send(f"You are currently trading. Please complete the trade to sell.")
             return
         #If they do, remove the card, add the big bucks
+        sell_val = CardGame.sell_value(card_info)
         cards_db.remove_card(id,card_info['id'])
         balance = cards_db.get_balance(id)
-        cards_db.update_balance(id,balance + int(card_info['value']))
+        cards_db.update_balance(id,balance + sell_val)
+        cards_db.add_to_market(card_info['id'])
 
         embed = discord.Embed(title=f"💰 Sold: **{card_info['name']}** 💰", color = 15834065)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
-        embed.description = f"Sold the card for {card_info['value']} Big Bucks."
+        embed.description = f"Sold the card for {sell_val} Big Bucks."
         await ctx.send(embed=embed)
 
     @commands.command(name='value')
     async def _value(self,ctx,arg):
+        '''Check the value of a card'''
         card_info = cards.get_card(arg)
+        sell_val = CardGame.sell_value(card_info)
+        buy_val = CardGame.buy_value(card_info)
         if card_info == None:
             await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
             return
         embed = discord.Embed(title=f"**{card_info['name']}**", color = 15834065)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
-        embed.description = f"{card_info['name']} is a(n) {card_info['rarity']} and currently worth {card_info['value']} Big Bucks."
+        embed.description = f"{card_info['name']} is a(n) {card_info['rarity']} card.\nCurrently worth {sell_val} Big Bucks to sell.\nCurrently worth {buy_val} Big Bucks to buy."
         await ctx.send(embed=embed)
 
     @commands.command(name='cards',)
@@ -149,6 +223,14 @@ class CardGame:
         if id not in [184002906981269505,178663053171228674]:
             pass
         cards_db.update_balance(id,arg)
+
+    @commands.command(name='card-get', hidden=True)
+    @commands.check(has_account)
+    async def _card_get(self,ctx,arg: int,arg1:int = 1):
+        id = ctx.author.id
+        if id not in [184002906981269505,178663053171228674]:
+            pass
+        cards_db.add_cards(id,[arg]*arg1)
 
     @commands.command(name='pay',)
     @commands.check(has_account)
@@ -208,6 +290,7 @@ class CardGame:
     @commands.command(name='trade-add',hidden=True)
     @commands.check(trade_valid)
     async def _trade_add(self,ctx,*arg):
+        '''Adds an item to the trade'''
         trade = trades[ctx.channel]
         await trade.add(ctx.author,arg)
         await ctx.message.delete()
@@ -215,6 +298,7 @@ class CardGame:
     @commands.command(name='trade-remove',hidden=True)
     @commands.check(trade_valid)
     async def _trade_remove(self,ctx,*arg):
+        '''Removes an item from the trade'''
         trade = trades[ctx.channel]
         await trade.remove(ctx.author,arg)
         await ctx.message.delete()
@@ -222,6 +306,7 @@ class CardGame:
     @commands.command(name='trade-accept',hidden=True)
     @commands.check(trade_valid)
     async def _trade_accept(self,ctx):
+        '''Accepts the trade'''
         trade = trades[ctx.channel]
         traded = await trade.accept(ctx.author)
         await ctx.message.delete()
@@ -237,6 +322,7 @@ class CardGame:
     @commands.command(name='trade-deny',hidden=True)
     @commands.check(trade_valid)
     async def _trade_deny(self,ctx):
+        '''Denies the trade'''
         trade = trades[ctx.channel]
         old_ctx = trade.ctx
         usr0,usr1 = trade.usrs[0],trade.usrs[1]
@@ -272,6 +358,7 @@ class TradeUnit:
         self.embed_messages = [None,None]
 
     async def setup(self):
+        #Setup the prompting message and the realtime trade viewer
         await self.channel.send(content=f'created new trade for {self.usrs[0].mention}-{self.usrs[1].mention}\nTrade by using !trade-add, !trade-remove, !trade-accept, !trade-deny')
         for i in range(2):
             usr = self.usrs[i]
@@ -283,6 +370,7 @@ class TradeUnit:
             self.embed_messages[i] = await self.channel.send(embed=embed)
 
     def get_string(self,i):
+        #Formats the offers
         s = ''
         if self.money[i] != 0:
             s += f'{self.money[i]} Big Bucks\n'
@@ -293,9 +381,11 @@ class TradeUnit:
         return s
 
     async def add(self,usr,args):
+        #For each item listed
         i = 0 if usr == self.usrs[0] else 1
         self.confirm = [False,False]
         for arg in args:
+            #If it is an int (want to add bigbucks)
             if arg.strip().isdigit():
                 val = int(arg)
                 balance = cards_db.get_balance(usr.id)
@@ -305,6 +395,7 @@ class TradeUnit:
                 self.money[i] += val
                 await self.channel.send(content=f"{usr.mention} added {val} Big Bucks to the trade.")
             else:
+            #If it is a card
                 if len(self.offers[i]) > 15:
                     await self.channel.send(content=f"Sorry, due to Discord's limits you can only add up to 15 cards to a trade.")
                     continue
@@ -335,6 +426,7 @@ class TradeUnit:
         await self.embed_messages[i].edit(embed=self.embeds[i])
 
     async def remove(self,usr,args):
+        #Almost the same as add
         i = 0 if usr == self.usrs[0] else 1
         self.confirm = [False,False]
         for arg in args:
@@ -380,7 +472,7 @@ class TradeUnit:
             cards_db.add_cards(id0,self.offers[1])
             cards_db.add_cards(id1,self.offers[0])
             return True
-        await self.channel.send(content=f"{usr.mention} has accepted the current trade.")
+        await self.channel.send(content=f"{usr.mention} has accepted the current trade. {self.usrs[i*-1+1].mention}, type !trade-accept to accept!")
 
 def setup(bot):
     bot.add_cog(CardGame(bot))
