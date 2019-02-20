@@ -73,6 +73,10 @@ class CardGame:
         id = ctx.author.id
         card_info = cards.get_card(arg)
         usr_cards = cards_db.get_cards(id)
+        #The card does not exist
+        if card_info == None:
+            await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
+            return
         #Check if the user has the card
         if int(card_info['id']) not in usr_cards:
             await ctx.send(f"You don't seem to have a copy of {card_info['name']}.")
@@ -102,7 +106,10 @@ class CardGame:
         card_names = '\n'.join(card_names)
         embed = discord.Embed(title=f"Card Count: {count}", color = 16744272)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
-        embed.add_field(name='**Cards**', value= card_names)
+        if card_names == '':
+            embed.add_field(name='**Cards**', value= "You have no cards! You can buy card packs with !buy")
+        else:
+            embed.add_field(name='**Cards**', value= card_names)
         embed.set_footer(text=f"Showing page {arg0} of {count//10 + 1}")
         await ctx.send(embed=embed)
 

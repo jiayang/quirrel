@@ -1,136 +1,246 @@
 id,name,rarity,kit,value
-2, DuckMC, Iconic, Assassin, 548
-3, Lectz, Iconic, Knight, 545
-4, SamitoD, Iconic, Assassin, 558
-5, Lolboatz, Iconic, Mage, 526
-6, Moa, Iconic, Knight, 100
-7, Nae, Iconic, Brute, 502
-8, Proxxy, Iconic, Ranger, 519
-9, Fred1, Iconic, Assassin, 549
-10, Rabious, Iconic, Ranger, 511
-11, Resistant, Iconic, Mage, 666
-12, Dragon_hunter888, Legendary, Brute, 362
-13, BM5, Legendary, Ranger, 352
-14, Hunnids, Legendary, Ranger, 403
-15, TwangChan, Legendary, Knight, 290
-16, Relyh, Legendary, Mage, 219
-17, Trajectories, Legendary, Ranger, 222
-18, Intoxicater, Legendary, Assassin, 334
-19, TokkyWokky, Legendary, Brute, 203
-20, Ssteve, Legendary, Assassin, 329
-21, Trishula, Legendary, Ranger, 555
-22, Diradus, Legendary, Brute, 258
-23, Freakyguy987, Legendary, Knight, 371
-24, Jesusman3, Legendary, Brute, 363
-25, IrrelephantNews, Legendary, Brute, 1
-26, Roguebunny, Legendary, Assassin, 1
-27, PiggyPyro, Legendary, Ranger, 1
-28, Dragon_hunter888, Legendary, Brute, 1
-29, BM5, Legendary, Ranger, 1
-30, Hunnids, Legendary, Ranger, 1
-31, TwangChan, Legendary, Knight, 1
-32, Relyh, Legendary, Ranger, 1
-33, Trajectories, Legendary, Ranger, 1
-34, Intoxicater, Legendary, Assassin, 1
-35, TokkyWokky, Legendary, Brute, 1
-36, Ssteve, Legendary, Assassin, 1
-37, Trishula, Legendary, Ranger, 1
-38, Diradus, Legendary, Brute, 1
-39, Freakyguy987, Legendary, Knight, 1
-40, Jesusman3, Legendary, Brute, 1
-41, DankTheMeme, Legendary, Brute, 1
-42, Javlin, Legendary, Brute, 1
-43, Ruvious, Legendary, Ranger, 1
-44, Asark, Legendary, Assassin, 1
-45, DWJosh, Mythic, Knight, 1
-46, Tottie, Mythic, Ranger, 1
-47, LOTR, Mythic, Brute, 1
-48, Scary_, Mythic, Assassin, 1
-49, DarkNinja_, Mythic, Assassin, 1
-50, Kilcamb, Mythic, Assassin, 1
-51, Archiie, Mythic, Assassin, 1
-52, IrrelephantNews, Mythic, Brute, 1
-53, Intel_i7, Mythic, Brute, 1
-54, Vakker, Mythic, Brute, 1
-55, _Gravel_, Mythic, Ranger, 1
-56, OmgitsPenguinii, Mythic, Brute, 1
-57, Brvn, Mythic, Brute, 1
-58, WhatEvz, Mythic, Ranger, 1
-59, Aurabby, Mythic, Knight, 1
-60, Yie, Mythic, Brute, 1
-61, Exspozed, Mythic, Brute, 1
-62, Frogling_, Mythic, Assassin, 1
-63, Roguebunny, Mythic, Assassin, 1
-64, ChocoButter, Mythic, Ranger, 1
-65, Vilare, Mythic, Brute, 1
-66, Suavy, Mythic, Ranger, 1
-67, Milzay, Mythic, Assassin, 1
-68, Kurbay, Mythic, Brute, 1
-69, Chxr, Mythic, Knight, 1
-70, TheNeonLazer, Rare, Brute, 1
-71, Hawaiian__, Rare, Knight, 1
-72, Jcx,  Rare, Knight, 1
-73, Nubzei, Rare, Assassin, 1
-74, Hida, Rare, Ranger, 1
-75, PiggyPyro, Rare, Ranger, 1
-76, JTB2k, Rare, Ranger, 1
-77, wesselyes, Rare, Ranger, 1
-78, Appleisred, Rare, Knight, 1
-79, GameBoyTre, Rare, Assassin, 1
-80, Amren, Rare, Brute, 1
-81, Skateboard3456, Rare, Knight, 1
-82, Yunyi, Rare, Assassin, 1
-83, AnzzaT, Rare, Brute, 1
-84, Pingis21, Rare, Brute, 1
-85, ImMasterOfGodds, Rare, Brute, 1
-86, Twix_, Rare, Mage, 1
-87, MikeBinBlazin, Rare, Ranger, 1
-88, Epislen, Rare, Ranger, 1
-89, Hannahxxrose, Rare, Ranger, 1
-90, Peraction, Rare, Mage, 1
-91, InsertNameAqui, Rare, Ranger, 1
-92, NeX_minereule, Rare, Brute, 1
-93, Smoothh, Rare, Brute, 1
-94, Saxy_, Rare, Avatar, 1
-95, Baekin, Rare, Knight, 1
-96, CQMBO, Rare, Knight, 1
-97, SaberToothFilms, Rare, Knight, 1
-98, LightZipper, Rare, Assassin, 1
-99, Acroh, Rare, Assassin, 1
-100, SmokeArrow, Rare, Assassin, 1
-101, Nordian, Rare, Brute, 1
-102, Zaptos, Rare, Ranger, 1
-103, Sich, Uncommon, Assassin, 1
-104, Webkinz, Uncommon, Knight, 1
-105, MexicanMud, Uncommon, Brute, 1
-106, Frazer, Uncommon, Brute, 1
-107, Dtberg, Uncommon, Ranger, 1
-108, Chxr, Uncommon, Brute, 1
-109, Cloax, Uncommon, Assassin, 1
-110, Wiz2K, Uncommon, Ranger, 1
-111, Snowz, Uncommon, Ranger, 1
-112, Satyaa, Uncommon, Ranger, 1
-113, Ioneh, Uncommon, Brute, 1
-114, Jtree, Uncommon, Mage, 1
-115, PhantCantGetGems, Uncommon, Assassin, 1
-116, Gracyn, Uncommon, Brute, 1
-117, Fland, Uncommon, Ranger, 1
-118, Kwcd, Uncommon, Knight, 1
-119, Matamex, Uncommon, Knight, 1
-120, Kagewege, Uncommon, Assassin, 1
-121, Spektah, Uncommon, Assassin, 1
-122, K0LL, Uncommon, Assassin, 1
-123, Excavation_, Uncommon, Knight, 1
-124, Swipy, Uncommon, Assassin, 1
-125, Porzingis, Uncommon, Brute, 1
-126, Coluurs, Uncommon, Brute, 1
-127, Cryp, Common, Ranger, 1
-128, Kamikazi, Common, Assassin, 1
-129, Aflo, Common, Knight, 1
-130, StopItNow, Common, Brute, 1
-131, Twiiks, Common, Brute, 1
-132, Hqro, Common, Brute, 1
-133, QuirkyGoat, Common, Brute, 1
-134, Cloax, Common, Assassin, 1
-135, Tercel, Common, Brute, 1
-136, GordonViper, Common, Knight, 1
+2,DuckMC, Iconic, Assassin, 548
+3,Lectz, Iconic, Knight, 545
+4,SamitoD, Iconic, Assassin, 558
+5,Lolboatz, Iconic, Mage, 526
+6,Moa, Iconic, Knight, 100
+7,Nae, Iconic, Brute, 502
+8,Proxxy, Iconic, Ranger, 519
+9,Fred1, Iconic, Assassin, 549
+10,Rabious, Iconic, Ranger, 511
+11,Resistant, Iconic, Mage, 666
+12,Dragon_hunter888, Legendary, Brute, 362
+13,BM5, Legendary, Ranger, 352
+14,Hunnids, Legendary, Ranger, 403
+15,TwangChan, Legendary, Knight, 290
+16,Relyh, Legendary, Mage, 219
+17,Trajectories, Legendary, Ranger, 222
+18,Intoxicater, Legendary, Assassin, 334
+19,TokkyWokky, Legendary, Brute, 203
+20,Ssteve, Legendary, Assassin, 329
+21,Trishula, Legendary, Ranger, 555
+22,Diradus, Legendary, Brute, 258
+23,Freakyguy987, Legendary, Knight, 371
+24,Jesusman3, Legendary, Brute, 363
+25,IrrelephantNews, Legendary, Brute, 228
+26,Roguebunny, Legendary, Assassin, 290
+27,PiggyPyro, Legendary, Ranger, 291
+28,Exspozed, Legendary, Brute, 200
+29,Asark, Legendary, Assassin, 13
+30,Soso_1, Legendary, Ranger, 335
+31,Yie, Legendary, Brute, 232
+32,Kzotic, Mythic, Knight, 50
+33,DankTheMeme, Mythic, Brute, 50
+34,DWJosh, Mythic, Knight, 50
+35,Tottie, Mythic, Ranger, 50
+36,LOTR, Mythic, Brute, 50
+37,Scary_, Mythic, Assassin, 50
+38,DarkNinja_, Mythic, Assassin, 50
+39,Kilcamb, Mythic, Ranger, 50
+40,Archiie, Mythic, Assassin, 50
+41,IrrelephantNews, Mythic, Brute, 50
+42,Intel_i7, Mythic, Brute, 50
+43,_Gravel_, Mythic, Ranger, 50
+44,OmgitsPenguinii, Mythic, Brute, 50
+45,Brvn, Mythic, Brute, 50
+46,WhatEvz, Mythic, Ranger, 50
+47,Aurabby, Mythic, Knight, 50
+48,Frogling_, Mythic, Assassin, 50
+49,Roguebunny, Mythic, Assassin, 50
+50,ChocoButter, Mythic, Ranger, 50
+51,Vilare, Mythic, Brute, 50
+52,Suavy, Mythic, Ranger, 50
+53,JTB2k, Mythic, Knight, 50
+54,appleisred, Mythic, Knight, 50
+55,Epislen, Mythic, Ranger, 50
+56,Peraction, Mythic, Mage, 50
+57,InsertNameAqui, Mythic, Ranger, 50
+58,Yunyi, Mythic, Assassin, 50
+59,inertialgravy27, Mythic, Brute, 50
+60,Rryderr118, Mythic, Assassin, 50
+61,Defo, Mythic, Ranger, 50
+62,TheNeonLazer, Rare, Brute, 15
+63,Jcx,  Rare, Knight, 15
+64,Nubzei, Rare, Assassin, 15
+65,Hida, Rare, Ranger, 15
+66,GameBoyTre, Rare, Assassin, 15
+67,Amren, Rare, Brute, 15
+68,Skateboard3456, Rare, Knight, 15
+69,Yunyi, Rare, Assassin, 15
+70,AnzzaT, Rare, Brute, 15
+71,Pingis21, Rare, Brute, 15
+72,ImMasterOfGodds, Rare, Brute, 15
+73,Twix_, Rare, Mage, 15
+74,MikeBinBlazin, Rare, Ranger, 15
+75,Hannahxxrose, Rare, Ranger, 15
+76,NeX_MinerEule, Rare, Brute, 15
+77,Smoothh, Rare, Brute, 15
+78,Saxy_, Rare, Avatar, 15
+79,Baekin, Rare, Knight, 15
+80,CQMBO, Rare, Knight, 15
+81,SaberToothFilms, Rare, Knight, 15
+82,LightZipper, Rare, Assassin, 15
+83,Acroh, Rare, Assassin, 15
+84,SmokeArrow, Rare, Assassin, 15
+85,Zaptos, Rare, Ranger, 15
+86,Ruvious, Rare, Brute, 15
+87,Vakker, Rare, Brute, 15
+88,Javlin, Rare, Brute, 15
+89,Chxr, Rare, Knight, 15
+90,ItsAdam, Rare, Brute, 15
+91,Kaydee_, Rare, Knight, 15
+92,Neverlxnd, Rare, Knight, 15
+93,ThePower, Rare, Mage, 15
+94,xMDH, Rare, Brute, 15
+95,Spektah, Rare, Brute, 15
+96,Ruvious, Rare, Brute, 15
+97,FuzzyMatt, Rare, Ranger, 15
+98,Soound, Rare, Knight, 15
+99,DoggyGodMan, Rare, Ranger, 15
+100,_Brit, Rare, Knight, 15
+101,Gxl, Rare, Ranger, 15
+102,BakaChi, Rare, Ranger, 15
+103,Hankz, Rare, Ranger, 15
+104,Nexep, Rare, Knight, 15
+105,shobs, Rare, Assassin, 15
+106,Shyxn, Rare, Brute, 15
+107,Sich, Uncommon, Assassin, 5
+108,Webkinz, Uncommon, Knight, 5
+109,MexicanMud, Uncommon, Brute, 5
+110,Frazerr, Uncommon, Brute, 5
+111,Dtberg, Uncommon, Ranger, 5
+112,Kane, Uncommon, Brute, 5
+113,Wiz2K, Uncommon, Ranger, 5
+114,Snowz, Uncommon, Ranger, 5
+115,Satyaa, Uncommon, Ranger, 5
+116,Ioneh, Uncommon, Brute, 5
+117,Jtree, Uncommon, Mage, 5
+118,PhantCantGetGems, Uncommon, Assassin, 5
+119,Gracyn, Uncommon, Brute, 5
+120,Fland, Uncommon, Ranger, 5
+121,kwcd, Uncommon, Knight, 5
+122,Matamex, Uncommon, Knight, 5
+123,KageWege, Uncommon, Assassin, 5
+124,K0LL, Uncommon, Assassin, 5
+125,Excavation_, Uncommon, Knight, 5
+126,Swipy, Uncommon, Assassin, 5
+127,Porzingis, Uncommon, Brute, 5
+128,Coluurs, Uncommon, Brute, 5
+129,Trainer_Red, Uncommon, Ranger, 5
+130,Blurrify, Uncommon, Brute, 5
+131,Scorchiie, Uncommon, Assassin, 5
+132,Falic, Uncommon, Brute, 5
+133,Vitalist, Uncommon, Rare, 5
+134,Zadanye, Uncommon, Ranger, 5
+135,Malfunction, Uncommon, Knight, 5
+136,EvoKiwi, Uncommon, Brute, 5
+137,Qatalyst, Uncommon, Knight, 5
+138,Bloon, Uncommon, Brute, 5
+139,Holly_Sand, Uncommon, Ranger, 5
+140,Excavation_, Uncommon, Knight, 5
+141,BasedGodAura, Uncommon, Brute, 5
+142,Cryp, Uncommon, Ranger, 5
+143,Grimleal, Uncommon, Knight, 5
+144,Forece, Uncommon, Knight, 5
+145,Eiryu, Uncommon, Mage, 5
+146,Abhinav_, Uncommon, Mage, 5
+147,DarkClarity, Uncommon, Brute, 5
+148,Jan, Uncommon, Brute, 5
+149,Necrai, Uncommon, Knight, 5
+150,Sleep, Uncommon, Knight, 5
+151,SeismicSlam, Uncommon, Brute, 5
+152,Etpwnguin, Uncommon, Ranger, 5
+153,Riposted, Uncommon, Knight, 5
+154,widster, Uncommon, Brute, 5
+155,NoHacks, Uncommon, Knight, 5
+156,Geno, Uncommon, Brute, 5
+157,RainDanceMC, Uncommon, Assassin, 5
+158,Limun, Uncommon, Brute, 5
+159,YassinMo, Uncommon, Brute, 5
+160,_II_, Uncommon, Assassin, 5
+161,LightZipper, Uncommon, Assassin, 5
+162,Meaps, Uncommon, Assassin, 5
+163,Gobie, Uncommon, Assassin, 5
+164,JustKeepSwimming, Uncommon, Brute, 5
+165,wutduh, Uncommon, Brute, 5
+166,Celerity, Uncommon, Assassin, 5
+167,Milzay, Common, Assassin, 1
+168,Aflo, Common, Knight, 1
+169,Kamikazi, Common, Assassin, 1
+170,nicke1224, Common, Ranger, 1
+171,mrpotatofail, Common, Brute, 1
+172,Kezn, Common, Knight, 1
+173,Mormons, Common, Brute, 1
+174,Kurbay, Common, Brute, 1
+175,135Taiki, Common, Knight, 1
+176,BigBlock99, Common, Brute, 1
+177,Vapourr, Common, Knight, 1
+178,Scarecrow, Common, Knight, 1
+179,Mimic, Common, Assassin, 1
+180,Reqzh, Common, Brute, 1
+181,Furro, Common, Brute, 1
+182,Jitr, Common, Knight, 1
+183,MattHacks, Common, Brute, 1
+184,Tercel, Common, Brute, 1
+185,MagiMoto, Common, Brute, 1
+186,SonicTheHoodHog, Common, Assassin, 1
+187,mepman9, Common, Knight, 1
+188,Cloax, Common, Assassin, 1
+189,icers, Common, Knight, 1
+190,VVrapz, Common, Brute, 1
+191,NeX_Waschbox, Common, Brute, 1
+192,Tek_, Common, Brute, 1
+193,Valk, Common, Brute, 1
+194,wwhockey, Common, Assassin, 1
+195,sewn, Common, Brute, 1
+196,SugaKookieMonsta, Common, Knight, 1
+197,Harved, Common, Brute, 1
+198,cri, Common, Knight, 1
+199,UnitedBrothers, Common, Brute, 1
+200,SenpaiJag, Common, Knight, 1
+201,HiltSmash, Common, Ranger, 1
+202,Savva60, Common, Assassin, 1
+203,GrizzBear, Common, Brute, 1
+204,PieAura, Common, Brute, 1
+205,i0s_Client, Common, Brute, 1
+206,x_skeletor, Common, Brute, 1
+207,ChuckNorris, Common, Assassin, 1
+208,Veaa, Common, Assassin, 1
+209,DiscHoe, Common, Ranger, 1
+210,YaphetS, Common, Knight, 1
+211,Gassr, Common, Brute, 1
+212,JakeyElSnakey, Common, Brute, 1
+213,Caitln, Common, Knight, 1
+214,Sharppy, Common, Brute, 1
+215,Madara, Common, Ranger, 1
+216,Potzeh, Common, Brute, 1
+217,Externalize, Common, Brute, 1
+218,StudentAlleg, Common, Brute, 1
+219,Mxple, Common, Brute, 1
+220,Nixnja, Common, Brute, 1
+221,Bewwy, Common, Assassin, 1
+222,Nqn, Common, Brute, 1
+223,Bionca, Common, Brute, 1
+224,Markings, Common, Knight, 1
+225,FunInTheBun, Common, Brute, 1
+226,Kyzuo, Common, Brute, 1
+227,xxFuzzay, Common, Knight, 1
+228,Kyule, Common, Knight, 1
+229,Sayzef, Common, Knight, 1
+230,Roman_Red, Common, Knight, 1
+231,Legit_Army, Common, Knight, 1
+232,Sarqh, Common, Assassin, 1
+233,1mejor, Common, Knight, 1
+234,Moisti, Common, Brute, 1
+235,NATURALBLEACH, Common, Assassin, 1
+236,SpecBlock, Common, Assassin, 1
+237,Kqiros, Common, Knight, 1
+238,Brcdy, Common, Knight, 1
+239,LifeStrike, Common, Knight, 1
+240,ShineSpiked, Common, Knight, 1
+241,wesselyay, Common, Ranger, 1
+242,Hide, Common, Knight, 1
+243,dumbeboy, Common, Brute, 1
+244,Lubbock, Common, Ranger, 1
+245,Abyss, Common, Brute, 1
+246,TacoPower, Common, Knight, 1
