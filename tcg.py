@@ -104,6 +104,7 @@ class CardGame:
         #Pagination
         if arg0 <= 0 or (count // 10) + 1 < arg0:
             await ctx.send(f'Invalid Page requested: {arg0}')
+            return
         #Stylistic and Discord embed limits, so paginate cards
         card_names = ''
         keys = list(market.keys())[(arg0-1) * 10 : (arg0-1) * 10 + 10]
@@ -204,6 +205,7 @@ class CardGame:
         #Pagination
         if arg0 <= 0 or (count // 10) + 1 < arg0:
             await ctx.send(f'Invalid Page requested: {arg0}')
+            return
         #Stylistic and Discord embed limits, so paginate cards
         card_names = cards.format(usr_cards[(arg0-1) * 10 : (arg0-1) * 10 + 10])
         card_names = '\n'.join(card_names)
