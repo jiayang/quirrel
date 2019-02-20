@@ -21,6 +21,7 @@ types = {
 with open('data/cards.csv') as f:
     r = csv.DictReader(f, delimiter=',')
     for val in r:
+        val['name'].replace('_','\_')
         CARDS[int(val['id'].strip())] = val
         CARDS[val['name'].lower().strip()] = val
         types[val['rarity'].lower().strip()][int(val['id'].strip())] = val

@@ -117,7 +117,7 @@ class CardGame:
             return
         embed = discord.Embed(title=f"**{card_info['name']}**", color = 15834065)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
-        embed.description = f"{card_info['name']} is a {card_info['rarity']} and currently worth {card_info['value']}."
+        embed.description = f"{card_info['name']} is a(n) {card_info['rarity']} and currently worth {card_info['value']} Big Bucks."
         await ctx.send(embed=embed)
 
     @commands.command(name='cards',)
