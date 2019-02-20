@@ -56,9 +56,9 @@ def open_pack(pack):
             n = random.randint(1,100)
             if n > 98:
                 cards += [random.choice(list(ICONICS.keys()))]
-            elif n > 90:
+            elif n > 92:
                 cards += [random.choice(list(LEGENDARIES.keys()))]
-            elif n > 70:
+            elif n > 75:
                 cards += [random.choice(list(MYTHICS.keys()))]
             else:
                 cards += [random.choice(list(RARES.keys()))]
