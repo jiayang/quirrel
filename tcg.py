@@ -100,6 +100,7 @@ class CardGame:
     async def _market_show(self,ctx,arg0: int = 1):
         '''Display the cards currently in the market'''
         market = cards_db.market_cards()
+        market = cards.organize_market(market)
         count = len(market)
         #Pagination
         if arg0 <= 0 or (count // 10) + 1 < arg0:
@@ -107,10 +108,9 @@ class CardGame:
             return
         #Stylistic and Discord embed limits, so paginate cards
         card_names = ''
-        keys = list(market.keys())[(arg0-1) * 10 : (arg0-1) * 10 + 10]
-        for key in keys:
-            card = cards.get_card(key)
-            card_names += cards.format_string(card) + f' x{market[key]}\n'
+        for tp in market:
+            card = cards.get_card(tp[0])
+            card_names += cards.format_string(card) + f' x{tp[1]}\n'
         embed = discord.Embed(title="**Market**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
         if card_names == '':
@@ -202,14 +202,14 @@ class CardGame:
         '''Displays the cards in your deck'''
         id = ctx.author.id
         usr_cards = cards_db.get_cards(id)
-        count = len(usr_cards)
+        card_names = cards.format(usr_cards)
+        count = len(card_names)
         #Pagination
         if arg0 <= 0 or (count // 10) + 1 < arg0:
             await ctx.send(f'Invalid Page requested: {arg0}')
             return
         #Stylistic and Discord embed limits, so paginate cards
-        card_names = cards.format(usr_cards[(arg0-1) * 10 : (arg0-1) * 10 + 10])
-        card_names = '\n'.join(card_names)
+        card_names = '\n'.join(card_names[(arg0-1) * 10 : (arg0-1) * 10 + 10])
         embed = discord.Embed(title=f"Card Count: {count}", color = 16744272)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
         if card_names == '':

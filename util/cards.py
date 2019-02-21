@@ -25,6 +25,7 @@ with open('data/cards.csv') as f:
         CARDS[val['name'].lower().strip()] = val
         types[val['rarity'].lower().strip()][int(val['id'].strip())] = val
         val['name'] = val['name'].replace('_','\_')
+        val['rarity'] = val['rarity'].strip().lower()
 
 def open_pack(pack):
     cards = []
@@ -85,11 +86,28 @@ def open_pack(pack):
 
 
 def format(lst):
-    new_lst = [format_string(CARDS[int(i)]) for i in lst]
-    return new_lst
+    d = dict()
+    organize = [[],[],[],[],[],[]]
+    for card in lst:
+        if card in d:
+            d[card] += 1
+        else:
+            d[card] = 1
+    spots = {
+        'iconic' : 0,
+        'legendary' : 1,
+        'mythic' : 2,
+        'rare' : 3,
+        'uncommon' : 4,
+        'common' : 5
+    }
+    for card in list(d.keys()):
+        info = CARDS[int(card)]
+        organize[spots[info['rarity']]].append(format_string(info) + f' x{d[card]}')
+    return [item for sublist in organize for item in sublist]
 
 def format_string(item):
-    s = f"{item['name']} | {item['rarity']} | {item['kit']}"
+    s = f"{item['name']} | {item['rarity'].capitalize()} | {item['kit']}"
     return s
 
 def name(id):
@@ -105,6 +123,21 @@ def get_card(name):
     if name.lower().strip() not in CARDS:
         return None
     return CARDS[name.lower().strip()]
+
+def organize_market(d):
+    spots = {
+        'iconic' : 0,
+        'legendary' : 1,
+        'mythic' : 2,
+        'rare' : 3,
+        'uncommon' : 4,
+        'common' : 5
+    }
+    organize = [[],[],[],[],[],[]]
+    for card in list(d.keys()):
+        info = CARDS[int(card)]
+        organize[spots[info['rarity']]].append((card,d[card]))
+    return [item for sublist in organize for item in sublist]
 
 def setup(bot):
     pass
