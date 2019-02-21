@@ -153,33 +153,34 @@ class CardGame:
 
     @commands.command(name='sell',)
     @commands.check(has_account)
-    async def _sell(self,ctx,arg):
+    async def _sell(self,ctx,*args):
         '''Sell a card for Big Bucks!'''
         id = ctx.author.id
-        card_info = cards.get_card(arg)
-        usr_cards = cards_db.get_cards(id)
-        #The card does not exist
-        if card_info == None:
-            await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
-            return
-        #Check if the user has the card
-        if int(card_info['id']) not in usr_cards:
-            await ctx.send(f"You don't seem to have a copy of {card_info['name']}.")
-            return
-        if id in currently_trading:
-            await ctx.send(f"You are currently trading. Please complete the trade to sell.")
-            return
-        #If they do, remove the card, add the big bucks
-        sell_val = CardGame.sell_value(card_info)
-        cards_db.remove_card(id,card_info['id'])
-        balance = cards_db.get_balance(id)
-        cards_db.update_balance(id,balance + sell_val)
-        cards_db.add_to_market(card_info['id'])
+        for arg in args:
+            card_info = cards.get_card(arg)
+            usr_cards = cards_db.get_cards(id)
+            #The card does not exist
+            if card_info == None:
+                await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
+                continue
+            #Check if the user has the card
+            if int(card_info['id']) not in usr_cards:
+                await ctx.send(f"You don't seem to have a copy of {card_info['name']}.")
+                continue
+            if id in currently_trading:
+                await ctx.send(f"You are currently trading. Please complete the trade to sell.")
+                continue
+            #If they do, remove the card, add the big bucks
+            sell_val = CardGame.sell_value(card_info)
+            cards_db.remove_card(id,card_info['id'])
+            balance = cards_db.get_balance(id)
+            cards_db.update_balance(id,balance + sell_val)
+            cards_db.add_to_market(card_info['id'])
 
-        embed = discord.Embed(title=f"💰 Sold: **{card_info['name']}** 💰", color = 15834065)
-        embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
-        embed.description = f"Sold the card for {sell_val} Big Bucks."
-        await ctx.send(embed=embed)
+            embed = discord.Embed(title=f"💰 Sold: **{card_info['name']}** 💰", color = 15834065)
+            embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
+            embed.description = f"Sold the card for {sell_val} Big Bucks."
+            await ctx.send(embed=embed)
 
     @commands.command(name='value')
     async def _value(self,ctx,arg):
