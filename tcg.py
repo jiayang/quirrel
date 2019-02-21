@@ -108,7 +108,7 @@ class CardGame:
             return
         #Stylistic and Discord embed limits, so paginate cards
         card_names = ''
-        for tp in market:
+        for tp in market[(arg0-1) * 10 : (arg0-1) * 10 + 10]:
             card = cards.get_card(tp[0])
             card_names += cards.format_string(card) + f' x{tp[1]}\n'
         embed = discord.Embed(title="**Market**", color = 16744272)
