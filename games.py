@@ -15,7 +15,7 @@ REVERSE_DIGITS = {
     '0⃣' : 9
 }
 
-class Games:
+class Games(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.games = dict() #Key is the "interactive message" Value is the actual game

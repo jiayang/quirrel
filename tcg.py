@@ -38,7 +38,7 @@ async def trade_valid(ctx):
         return False
     return True
 
-class CardGame:
+class CardGame(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot

@@ -8,7 +8,7 @@ import asyncio
 SEARCH_URL = 'https://api.jikan.moe/v3/search/anime?q='
 ANIME_URL = 'https://api.jikan.moe/v3/anime/'
 
-class Anime:
+class Anime(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot

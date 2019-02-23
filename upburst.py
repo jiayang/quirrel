@@ -13,7 +13,7 @@ MAPS = {
 UPBURST_EMOJI = '<:upburst:451133832217755659>'
 
 
-class Upburst:
+class Upburst(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot

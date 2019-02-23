@@ -25,7 +25,7 @@ with open('secret/keys.json') as keys:
     api_keys = json.loads(keys.read())
 DSKY_KEY = api_keys['dark_sky']
 
-class Weather:
+class Weather(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

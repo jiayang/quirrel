@@ -25,7 +25,7 @@ def load_opus_lib():
 if not discord.opus.is_loaded():
     load_opus_lib()
 
-class Music:
+class Music(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot

@@ -10,11 +10,11 @@ from nba_api.stats.static import players,teams
 
 from util import dio
 
-class Basketball:
+class Basketball(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        
+
     @commands.command(name='stats')
     async def _stats(self,ctx, *args):
         '''Retrieves the stats of an NBA player'''
