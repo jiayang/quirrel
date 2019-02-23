@@ -186,11 +186,12 @@ class CardGame(commands.Cog):
     async def _value(self,ctx,arg):
         '''Check the value of a card'''
         card_info = cards.get_card(arg)
-        sell_val = CardGame.sell_value(card_info)
-        buy_val = CardGame.buy_value(card_info)
+
         if card_info == None:
             await ctx.send(f"There doesn't seem to be a **{arg}** in our records.")
             return
+        sell_val = CardGame.sell_value(card_info)
+        buy_val = CardGame.buy_value(card_info)
         embed = discord.Embed(title=f"**{card_info['name']}**", color = 15834065)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
         embed.description = f"{card_info['name']} is a(n) {card_info['rarity']} card.\nCurrently worth {sell_val} Big Bucks to sell.\nCurrently worth {buy_val} Big Bucks to buy."
