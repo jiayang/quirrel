@@ -339,9 +339,10 @@ class CardGame(commands.Cog):
         await trade.channel.delete()
         del trades[ctx.channel]
         await old_ctx.send(f'{ctx.author.mention} has denied the trade between {usr0.mention} and {usr1.mention}')
-
+        
     async def on_message(self,ctx):
         #Update a dictionary every message, gaining xp every minute
+        print('qhsdlafkjasdhf')
         id = ctx.author.id
         await has_account(id)
         if id in self.times:
