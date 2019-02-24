@@ -26,6 +26,7 @@ async def has_account(ctx):
 
 trades = dict() #Channel -> TradeUnit
 currently_trading = set()
+times = dict()
 
 async def trade_valid(ctx):
     #Checks if the trade command was typed in a valid channel
@@ -42,18 +43,29 @@ class CardGame(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.times = dict()
 
     @commands.command(name='balance',aliases = ['bal'])
     @commands.check(has_account)
     async def _balance(self,ctx):
         '''Displays the balance of the user'''
+        #======== Temporary
+        id = ctx.author.id
+        await has_account(id)
+        if id in times:
+            if datetime.datetime.utcnow() - times[id] > datetime.timedelta(minutes=1):
+                balance = cards_db.get_balance(id)
+                cards_db.update_balance(id,balance + random.randint(20,40))
+                times[id] = datetime.datetime.utcnow()
+        else:
+            times[id] = datetime.datetime.utcnow()
+        #===============
         id = ctx.author.id
         balance = cards_db.get_balance(id)
         embed = discord.Embed(title=f"Current Balance: **{balance}** Big Bucks", color = 16744272)
         embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
         embed.description = "Keep typing to earn more money!"
         await ctx.send(embed=embed)
+
 
     @commands.command(name='buy',)
     @commands.check(has_account)
@@ -339,19 +351,18 @@ class CardGame(commands.Cog):
         await trade.channel.delete()
         del trades[ctx.channel]
         await old_ctx.send(f'{ctx.author.mention} has denied the trade between {usr0.mention} and {usr1.mention}')
-        
+
     async def on_message(self,ctx):
         #Update a dictionary every message, gaining xp every minute
-        print('qhsdlafkjasdhf')
         id = ctx.author.id
         await has_account(id)
-        if id in self.times:
-            if datetime.datetime.utcnow() - self.times[id] > datetime.timedelta(minutes=1):
+        if id in times:
+            if datetime.datetime.utcnow() - times[id] > datetime.timedelta(minutes=1):
                 balance = cards_db.get_balance(id)
                 cards_db.update_balance(id,balance + random.randint(20,40))
-                self.times[id] = datetime.datetime.utcnow()
+                times[id] = datetime.datetime.utcnow()
         else:
-            self.times[id] = datetime.datetime.utcnow()
+            times[id] = datetime.datetime.utcnow()
 
 def setup(bot):
     bot.add_cog(CardGame(bot))
