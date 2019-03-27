@@ -48,17 +48,6 @@ class CardGame(commands.Cog):
     @commands.check(has_account)
     async def _balance(self,ctx):
         '''Displays the balance of the user'''
-        #======== Temporary
-        id = ctx.author.id
-        await has_account(id)
-        if id in times:
-            if datetime.datetime.utcnow() - times[id] > datetime.timedelta(minutes=1):
-                balance = cards_db.get_balance(id)
-                cards_db.update_balance(id,balance + random.randint(20,40))
-                times[id] = datetime.datetime.utcnow()
-        else:
-            times[id] = datetime.datetime.utcnow()
-        #===============
         id = ctx.author.id
         balance = cards_db.get_balance(id)
         embed = discord.Embed(title=f"Current Balance: **{balance}** Big Bucks", color = 16744272)
@@ -237,7 +226,7 @@ class CardGame(commands.Cog):
     async def _balupd(self,ctx,arg: int):
         id = ctx.author.id
         if id not in [184002906981269505,178663053171228674]:
-            pass
+            return
         cards_db.update_balance(id,arg)
 
     @commands.command(name='card-get', hidden=True)
@@ -245,7 +234,7 @@ class CardGame(commands.Cog):
     async def _card_get(self,ctx,arg: int,arg1:int = 1):
         id = ctx.author.id
         if id not in [184002906981269505,178663053171228674]:
-            pass
+            return
         cards_db.add_cards(id,[arg]*arg1)
 
     @commands.command(name='pay',)
@@ -352,6 +341,7 @@ class CardGame(commands.Cog):
         del trades[ctx.channel]
         await old_ctx.send(f'{ctx.author.mention} has denied the trade between {usr0.mention} and {usr1.mention}')
 
+    @commands.Cog.listener()
     async def on_message(self,ctx):
         #Update a dictionary every message, gaining xp every minute
         id = ctx.author.id

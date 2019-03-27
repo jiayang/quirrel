@@ -28,6 +28,7 @@ class Games(commands.Cog):
         await a.setup()
         self.games[a.io.id] = a
 
+    @commands.Cog.listener()
     async def on_reaction_add(self,reaction,user):
         message = reaction.message
         if user.bot or message.id not in self.games:
