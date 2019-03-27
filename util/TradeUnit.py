@@ -47,7 +47,7 @@ class TradeUnit:
             if arg.strip().isdigit():
                 val = int(arg)
                 balance = cards_db.get_balance(usr.id)
-                if val > balance:
+                if val + self.money[i] > balance:
                     await self.channel.send(content=f"You can not afford that! Your current balance is {balance}")
                     continue
                 self.money[i] += val
