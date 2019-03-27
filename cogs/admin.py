@@ -21,8 +21,8 @@ class Admin(commands.Cog):
             print('Pulled from git')
             await ctx.send('Successfully pulled from git')
         try:
-            self.bot.unload_extension(module)
-            self.bot.load_extension(module)
+            self.bot.unload_extension('cogs.' + module)
+            self.bot.load_extension('cogs.' + module)
         except Exception as e:
             print('{}: {}'.format(type(e).__name__, e))
             await ctx.send('{}: {}'.format(type(e).__name__, e))
@@ -41,7 +41,7 @@ class Admin(commands.Cog):
             print('Pulled from git')
             await ctx.send('Successfully pulled from git')
         try:
-            self.bot.load_extension(module)
+            self.bot.load_extension('cogs.' + module)
         except Exception as e:
             print('{}: {}'.format(type(e).__name__, e))
             await ctx.send('{}: {}'.format(type(e).__name__, e))
