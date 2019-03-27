@@ -228,7 +228,7 @@ class CardGame(commands.Cog):
         if id not in [184002906981269505,178663053171228674]:
             return
         if arg1 != None:
-            id = self.bot.get_user(id=int(arg0.strip('!<@').strip('>'))).id
+            id = self.bot.get_user(id=int(arg1.strip('!<@').strip('>'))).id
         cards_db.update_balance(id,arg)
 
     @commands.command(name='card-get', hidden=True)
