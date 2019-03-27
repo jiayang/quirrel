@@ -223,10 +223,12 @@ class CardGame(commands.Cog):
 
     @commands.command(name='balupd', hidden=True)
     @commands.check(has_account)
-    async def _balupd(self,ctx,arg: int):
+    async def _balupd(self,ctx,arg0,arg1=None):
         id = ctx.author.id
         if id not in [184002906981269505,178663053171228674]:
             return
+        if arg1 != None:
+            id = self.bot.get_user(id=int(arg0.strip('!<@').strip('>'))).id
         cards_db.update_balance(id,arg)
 
     @commands.command(name='card-get', hidden=True)
