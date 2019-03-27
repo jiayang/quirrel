@@ -229,7 +229,7 @@ class CardGame(commands.Cog):
             return
         if arg1 != None:
             id = self.bot.get_user(id=int(arg1.strip('!<@').strip('>'))).id
-        cards_db.update_balance(id,arg)
+        cards_db.update_balance(id,arg0)
 
     @commands.command(name='card-get', hidden=True)
     @commands.check(has_account)
