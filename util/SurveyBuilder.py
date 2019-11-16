@@ -4,6 +4,7 @@ import discord
 from util import dio
 
 DIGITS = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣','0⃣']
+logo_urls = ["https://imgur.com/huTrrHV.jpg","https://i.imgur.com/zFwZMeP.png"]
 
 class SurveyBuilder:
     '''A builder to create the survey'''
@@ -21,8 +22,8 @@ class SurveyBuilder:
     async def gset_title(self):
         '''Sets the title of the survey'''
         garbage = []
-        response = await dio.prompt(self.ctx,'**Title Of Survey?:**',garbage)
-        self.title = response.content
+        response = await dio.prompt(self.ctx,'**Inquiry Number?:**',garbage)
+        self.title = "INQUIRY " + response.content
         await self.ctx.channel.delete_messages(garbage)
         if self.message == None:
             self.message = await self.ctx.send(embed = await self.format())
@@ -100,9 +101,9 @@ class SurveyBuilder:
         if ans == '':
             ans = '_Leave your answers below_'
         if self.content != None:
-            embed.add_field(name=self.content, value = ans + '\n')
+            embed.add_field(name=f'**{self.content}**', value = ans + '\n')
         embed.set_footer(text=f'Requested by {self.author.name} | {self.author.id}')
-        embed.set_thumbnail(url='https://imgur.com/huTrrHV.jpg')
+        embed.set_thumbnail(url=logo_urls[0])
         return embed
 
 def setup(bot):

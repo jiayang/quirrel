@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-startup_extensions=['admin','anime','guild','survey','upburst','weather','music','rand','games','tcg'] # Discontinued: basketball
+startup_extensions=['admin','anime','guild','survey','upburst','weather','rand','rejoinupburst','games','tcg'] # Discontinued: basketball #pause on the music
 bot = commands.Bot(command_prefix='!')
 token = open('secret/token.txt','r').read().strip()
 
