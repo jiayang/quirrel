@@ -19,27 +19,14 @@ class Rejoin(commands.Cog):
                 dm = user.dm_channel
                 if dm is None:
                     dm = await user.create_dm()
-                try:
-                    await guild.fetch_ban(user)
+                
+                if user in await guild.bans():
                     await guild.unban(user)
                     await dm.send("Hello! I don't know why you got **banned**, but if you ever want to rejoin, here you go!")
-                except:
+                else:
                     await dm.send("Hello! I don't know why you got **kicked** or **left**, but if you ever want to rejoin, here you go!")
                 await dm.send(content=invite)
-    @commands.Cog.listener()
-    async def on_member_ban(self, guild, user):
-        if (guild.id == 166995343249113088):
-            if (user.id in SUPERUSERS):
-                await guild.unban(user)
-                channel = guild.get_channel(556513668125163538)
-                invite = await channel.create_invite(max_uses = 1)
-                dm = user.dm_channel
-                if dm is None:
-                    dm = await user.create_dm()
-                await dm.send("Hello! I don't know why you got **banned**, but if you ever want to rejoin, here you go!")
-                await dm.send(content=invite)
-
-                
+            
     @commands.Cog.listener()
     async def on_member_join(self, member):
         guild = member.guild
