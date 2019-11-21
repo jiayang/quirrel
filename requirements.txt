@@ -24,4 +24,4 @@ PyYAML==3.12
 SecretStorage==2.3.1
 six==1.11.0
 ttystatus==0.38
-Werkzeug==0.14.1
+Werkzeug==0.15.3
