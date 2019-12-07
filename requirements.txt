@@ -9,13 +9,11 @@ gyp==0.1
 idna==2.6
 ipaddress==1.0.17
 itsdangerous==0.24
-Jinja2==2.10
 keyring==10.6.0
 keyrings.alt==3.0
 Markdown==2.6.9
 MarkupSafe==1.0
 passlib==1.7.1
-pycrypto==2.6.1
 Pygments==2.2.0
 pygobject==3.26.1
 pytz==2018.7
