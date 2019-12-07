@@ -44,7 +44,7 @@ class Survey(commands.Cog):
             await msg.add_reaction(DIGITS[i])
 
 
-    @commands.command(name='changeicon', hidden=True)
+    @commands.command(name='seticon', hidden=True)
     async def _changeicon(self,ctx, *args):
         '''Changes the icon in the survey'''
         user = ctx.author

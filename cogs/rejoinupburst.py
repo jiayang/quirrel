@@ -16,16 +16,12 @@ class Rejoin(commands.Cog):
                 channel = guild.get_channel(556513668125163538)
                 invite = await channel.create_invite(max_uses = 1)
                 user = self.bot.get_user(member.id)
-                dm = user.dm_channel
-                if dm is None:
-                    dm = await user.create_dm()
-                
                 if user in await guild.bans():
                     await guild.unban(user)
-                    await dm.send("Hello! I don't know why you got **banned**, but if you ever want to rejoin, here you go!")
+                    await user.send(content="Hello! I don't know why you got **banned**, but if you ever want to rejoin, here you go!")
                 else:
-                    await dm.send("Hello! I don't know why you got **kicked** or **left**, but if you ever want to rejoin, here you go!")
-                await dm.send(content=invite)
+                    await user.send(content="Hello! I don't know why you got **kicked** or **left**, but if you ever want to rejoin, here you go!")
+                await user.send(content=invite)
             
     @commands.Cog.listener()
     async def on_member_join(self, member):
