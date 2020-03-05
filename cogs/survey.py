@@ -29,6 +29,7 @@ class Survey(commands.Cog):
         #Fills in each entry of the survey
         await survey.gset_title()
         await survey.gset_content()
+        await survey.gset_image()
         await survey.gset_answers()
         #Cleanup
         await survey.message.delete()

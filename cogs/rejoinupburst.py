@@ -16,7 +16,12 @@ class Rejoin(commands.Cog):
                 channel = guild.get_channel(556513668125163538)
                 invite = await channel.create_invite(max_uses = 1)
                 user = self.bot.get_user(member.id)
-                if user in await guild.bans():
+                banned = False
+                for ban in await guild.bans():
+                    #print(ban)
+                    if ban.user.id == member.id:
+                        banned = True
+                if banned:
                     await guild.unban(user)
                     await user.send(content="Hello! I don't know why you got **banned**, but if you ever want to rejoin, here you go!")
                 else:
@@ -25,6 +30,7 @@ class Rejoin(commands.Cog):
             
     @commands.Cog.listener()
     async def on_member_join(self, member):
+
         guild = member.guild
         if (guild.id == 166995343249113088):
             if (member.id in SUPERUSERS):
