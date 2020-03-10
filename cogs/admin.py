@@ -73,5 +73,8 @@ class Admin(commands.Cog):
         activity = discord.Activity(type=types[args[0]], name=' '.join(args[1:]))
         await self.bot.change_presence(activity=activity)
 
+    
+
+
 def setup(bot):
     bot.add_cog(Admin(bot))

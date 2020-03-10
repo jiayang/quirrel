@@ -29,8 +29,9 @@ class Survey(commands.Cog):
         #Fills in each entry of the survey
         await survey.gset_title()
         await survey.gset_content()
-        await survey.gset_image()
+        # await survey.gset_image()
         await survey.gset_answers()
+        await survey.gset_image()
         #Cleanup
         await survey.message.delete()
         await sent.delete()
@@ -38,7 +39,8 @@ class Survey(commands.Cog):
         survey_role = discord.utils.get(ctx.guild.roles, name='survey')
         survey_tag = ''
         if survey_role != None:
-            survey_tag = survey_role.mention
+            pass
+            #survey_tag = survey_role.mention
         msg = await ctx.send(embed=await survey.format(), content = survey_tag)
         #Add reacs
         for i in range(len(survey.answers)):

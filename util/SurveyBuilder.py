@@ -6,7 +6,7 @@ from util import dio
 DIGITS = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣','0⃣']
 INQUIRY_PROMPT = '**What is the Inquiry Number?:**'
 QUESTION_PROMPT = '**What is the question?:**'
-IMAGE_PROMPT = '**Do you want to add an image? If so, just enter the link. If not, type no**'
+IMAGE_PROMPT = '**Do you want to add an image? (y/N) If not, do nothing!**'
 ANSWERS_PROMPT = '**What are the answer choices?:**\n(Type .done when all choices are completed. MAX 10 answers)'
 
 class SurveyBuilder:
@@ -54,22 +54,19 @@ class SurveyBuilder:
     async def gset_image(self):
         '''Sets the image of the survey'''
         garbage = []
-        response = await dio.prompt(self.ctx,IMAGE_PROMPT,garbage)
-        while response.content.startswith('.fix'): #If they need to fix something else in the survey
-            fgarbage = []
-            fresponse = await dio.prompt(self.ctx,'**What do you need to fix?** (title,question) or Type .nvm to stop fix',fgarbage) #Keep prompting them until they give valid response
-            await self.ctx.channel.delete_messages(fgarbage)
-            if fresponse.content == '.nvm': #Cancel the fix
-                response = await dio.prompt(self.ctx,IMAGE_PROMPT,garbage)
-            elif fresponse.content == 'title': #Fix the title, then go back to original
-                await self.gset_title()
-                response = await dio.prompt(self.ctx,IMAGE_PROMPT,garbage)
-            elif fresponse.content == 'question': #Fix the question, then go back to original
-                await self.gset_content()
-                response = await dio.prompt(self.ctx,IMAGE_PROMPT,garbage)
-            await self.ctx.channel.delete_messages(fgarbage)
-        if response.content.lower() != 'no' and 'http' in response.content.lower():
-            self.image = response.content
+        response = await dio.prompt_timeout(self.ctx,IMAGE_PROMPT,garbage,5)
+        if response is None or response.content.lower() == 'n' or response.content.lower() == 'no':
+            self.image = None
+        elif response.content.lower() == 'y' or response.content.lower() == 'yes':
+            ans = 'no'
+            while ans.lower() != 'yes' and ans.lower() != 'y':
+                response = await dio.prompt(self.ctx,'**Provide the link for the survey: **',garbage)
+                confirmation = await dio.prompt(self.ctx,'**Is this good? (y/n): **' + response.content, garbage)
+                ans = confirmation.content
+            if response.content.lower() != 'no' and 'http' in response.content.lower():
+                self.image = response.content
+            else:
+                self.image = None
         else:
             self.image = None
         await self.ctx.channel.delete_messages(garbage)
@@ -88,7 +85,7 @@ class SurveyBuilder:
             response = await dio.prompt(self.ctx,f'**What is answer choice {num_ans+1}:**',garbage) #Prompts the user
             while response.content.startswith('.fix'): #If they need to fix something else in the survey
                 fgarbage = []
-                fresponse = await dio.prompt(self.ctx,'**What do you need to fix?** (title,question,image,answers) or Type .nvm to stop fix',fgarbage) #Keep prompting them until they give valid response
+                fresponse = await dio.prompt(self.ctx,'**What do you need to fix?** (title,question,answers) or Type .nvm to stop fix',fgarbage) #Keep prompting them until they give valid response
                 await self.ctx.channel.delete_messages(fgarbage)
                 if fresponse.content == '.nvm': #Cancel the fix
                     response = await dio.prompt(self.ctx,f'**What is answer choice {num_ans+1}:**',garbage)
@@ -97,9 +94,6 @@ class SurveyBuilder:
                     response = await dio.prompt(self.ctx,f'**What is answer choice {num_ans+1}:**',garbage)
                 elif fresponse.content == 'question': #Fix the question, then go back to original
                     await self.gset_content()
-                    response = await dio.prompt(self.ctx,f'**What is answer choice {num_ans+1}:**',garbage)
-                elif fresponse.content == 'image':
-                    await self.gset_image()
                     response = await dio.prompt(self.ctx,f'**What is answer choice {num_ans+1}:**',garbage)
                 elif fresponse.content == 'answers': #Fix the answer
                     qgarb = []
@@ -128,14 +122,17 @@ class SurveyBuilder:
 
     async def format(self):
         '''Formats the string builder to the actual str sent'''
-        embed = discord.Embed(title=f'**{self.title}**', color = 16744272)
+        if self.content != None:
+            embed = discord.Embed(title=f'**{self.title}:\n{self.content}**', color = 16744272)
+        else:
+            embed = discord.Embed(title=f'**{self.title}:\nQuestion Here**', color = 16744272)
         ans = ''
         for i in range(len(self.answers)):
             ans += DIGITS[i] + ' ' + self.answers[i] + '\n'
         if ans == '':
             ans = '_Leave your answers below_'
-        if self.content != None:
-            embed.add_field(name=f'**{self.content}**', value = ans + '\n')
+            
+        embed.add_field(name='Options:', value = ans + '\n')
         footer = ''
         if self.finished:
             embed.set_footer(text=f'Requested by {self.author.name} | {self.author.id}')
