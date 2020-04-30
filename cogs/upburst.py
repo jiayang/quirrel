@@ -3,7 +3,7 @@ from discord.ext import commands
 import discord
 
 from util import dio
-
+from util import ccl_team_scraper as scrape
 MAPS = {
     'valley' : 'Hidden Valley',
     'peaks' : 'Twin Peaks EXTREME',
@@ -18,20 +18,20 @@ class Upburst(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='roster',hidden=True)
-    async def _roster_check(self,ctx):
-        #if ctx.guild.id != 166995343249113088:
-        #    return
-        garbage = [ctx.message]
-        num = await dio.prompt(ctx,'**Official Roster Check No.?**',garbage)
-        when = await dio.prompt(ctx,'**When?:**',garbage)
-        time = datetime.datetime.now().strftime('%m/%d/%Y')
-        role = discord.utils.get(ctx.guild.roles, name='Esteemed Member')
-        role_tag = ''
-        if role != None:
-            role_tag = role.mention
-        await ctx.send(f'**Official Roster Check #{num.content}**             {role_tag}\n_{time}_\n\n_Please react with your corresponding ICON if you can make this AWESOME Scrimmage at {when.content}_')
-        await ctx.channel.delete_messages(garbage)
+    # @commands.command(name='roster',hidden=True)
+    # async def _roster_check(self,ctx):
+    #     #if ctx.guild.id != 166995343249113088:
+    #     #    return
+    #     garbage = [ctx.message]
+    #     num = await dio.prompt(ctx,'**Official Roster Check No.?**',garbage)
+    #     when = await dio.prompt(ctx,'**When?:**',garbage)
+    #     time = datetime.datetime.now().strftime('%m/%d/%Y')
+    #     role = discord.utils.get(ctx.guild.roles, name='Esteemed Member')
+    #     role_tag = ''
+    #     if role != None:
+    #         role_tag = role.mention
+    #     await ctx.send(f'**Official Roster Check #{num.content}**             {role_tag}\n_{time}_\n\n_Please react with your corresponding ICON if you can make this AWESOME Scrimmage at {when.content}_')
+    #     await ctx.channel.delete_messages(garbage)
 
     @commands.command(name='schedule',hidden=True)
     async def _schedule(self,ctx):
@@ -63,7 +63,20 @@ class Upburst(commands.Cog):
         await ctx.channel.delete_messages(garbage)
 
 
-
+    @commands.command(name='roster',aliases = ['r'])
+    async def _roster(self,ctx, *args):
+        team = scrape.get_closest_team(" ".join(args))
+        print("hi1")
+        if team == None:
+            await ctx.send("I can't find that team!")
+            return
+        print("hi2")
+        roster = scrape.get_team_roster(team)
+        embed = discord.Embed(title=f"**{team}**", color = 16744272)
+        embed.set_author(name=ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.add_field(name='Roster', value= '\n'.join(roster))
+        await ctx.send(embed=embed)
+        
 
 
 

@@ -67,7 +67,7 @@ def download_info(urls):
 
     #If it has just one entry (request was a single video), return that video's info
     if len(urls) == 1:
-        data['title'] = urls[0]['snippet']['title']
+        data['title'] = urls[0]['snippet']['title'].replace("&quot;",'"');
         data['link'] = YT_VIDEO_BASE.format(urls[0]['id']['videoId'])
         data['thumbnail'] = urls[0]['snippet']['thumbnails']['default']['url']
     elif len(urls) > 1:
