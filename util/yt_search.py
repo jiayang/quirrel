@@ -1,19 +1,18 @@
+import os
+
 import urllib
 import json
 from pathlib import Path
 
 import youtube_dl
 
-#Setup
-with open('secret/keys.json') as keys:
-    api_keys = json.loads(keys.read())
 
 YT_VIDEO_API = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q={}&key={}"
 YT_PLAYLIST_API = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id={}&key={}"
 YT_PLAYLIST_ITEMS = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId={}&key={}&maxResults=50"
 YT_PLAYLIST_ITEMS_PAGINATION = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId={}&key={}&pageToken={}&maxResults=50"
 YT_PLAYLIST_BASE = 'https://www.youtube.com/playlist?list={}'
-YT_KEY = api_keys['youtube']
+YT_KEY = os.getenv("YOUTUBE_API_KEY")
 YT_VIDEO_BASE = 'https://www.youtube.com/watch?v={}'
 YDL_OPTIONS = {
     'quiet': True,

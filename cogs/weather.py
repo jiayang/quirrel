@@ -21,9 +21,7 @@ ICONS['partly-cloudy-day'] = ('🌥','https://imgur.com/2DYiPx2.png')
 ICONS['partly-cloudy-night'] = ('🌖','https://imgur.com/snxDP2E.png')
 
 WEATHER_API = "https://api.darksky.net/forecast/{}/{},{}"
-with open('secret/keys.json') as keys:
-    api_keys = json.loads(keys.read())
-DSKY_KEY = api_keys['dark_sky']
+DSKY_KEY = os.getenv("DARKSKY_API_KEY")
 
 class Weather(commands.Cog):
     def __init__(self, bot):
