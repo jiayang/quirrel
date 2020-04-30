@@ -1,11 +1,10 @@
+import os
+
 import json
 import urllib
 
 BING_API = 'http://dev.virtualearth.net/REST/v1/Locations?query={}&key={}'
-with open('secret/keys.json') as keys:
-    api_keys = json.loads(keys.read())
-BING_KEY = api_keys['bing_api']
-
+BING_KEY = os.getenv("BING_API_KEY")
 
 
 def get_raw_data(loc_args):

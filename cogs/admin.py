@@ -1,3 +1,5 @@
+#admin.py
+
 import os
 
 from discord.ext import commands
@@ -5,16 +7,17 @@ import discord
 import git
 import datetime
 
+from util.admin_command import admin_only
+
 DEV_IDS = [184002906981269505,178663053171228674]
 class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='reload', hidden=True)
+    @admin_only
     async def _reload(self, ctx, module : str, pull = ''):
         """Reloads a module."""
-        if ctx.author.id not in DEV_IDS:
-            pass
         if pull == '-p':
             g = git.cmd.Git('.')
             g.pull()
@@ -31,10 +34,9 @@ class Admin(commands.Cog):
             await ctx.send(('SUCCESSFULLY RELOADED: ' + module))
 
     @commands.command(name='load',hidden=True)
+    @admin_only
     async def _load(self, ctx, module : str, pull = ''):
         """Loads a module."""
-        if ctx.author.id not in DEV_IDS:
-            pass
         if pull == '-p':
             g = git.cmd.Git('.')
             g.pull()
@@ -50,6 +52,7 @@ class Admin(commands.Cog):
             await ctx.send('SUCCESSFULLY LOADED: ' + module)
 
     @commands.command(name='servers', hidden=True)
+    @admin_only
     async def _servers(self, ctx):
         '''Lists all the servers the bot is a part of'''
         if ctx.author.id not in DEV_IDS:
@@ -61,7 +64,9 @@ class Admin(commands.Cog):
         await ctx.send(embed=embed)
         await ctx.message.delete()
 
+
     @commands.command(name='presence', hidden=True)
+    @admin_only
     async def _change_presence(self,ctx,*args):
         '''Change the presence of the bot. Usage: !presence [TYPE] [MESSAGE_TO_BE_SHOWN]'''
         types = {

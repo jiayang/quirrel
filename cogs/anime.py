@@ -21,7 +21,9 @@ class Anime(commands.Cog):
             search_res = json.loads(urlopen(SEARCH_URL + query).read())
             anime_res = json.loads(urlopen(ANIME_URL + str(search_res['results'][0]['mal_id'])).read())
 
-            embed = discord.Embed(title=f"**{anime_res['title']}**", colour=discord.Colour(0xd19bf1), description=f"[MAL Link]({anime_res['url']})\n" + anime_res['synopsis'].replace('(', "\n\n("))
+            embed = discord.Embed(title=f"**{anime_res['title']}**",
+                                  colour=discord.Colour(0xd19bf1),
+                                  description=f"[MAL Link]({anime_res['url']})\n" + anime_res['synopsis'].replace('(', "\n\n("))
             embed.set_thumbnail(url=anime_res['image_url'])
             embed.add_field(name="**Type**", value=anime_res['type'], inline=True)
             embed.add_field(name="**Episodes**", value=str(anime_res['episodes']), inline=True)
@@ -35,5 +37,6 @@ class Anime(commands.Cog):
             print(e)
             await ctx.send('API error, try again')
         await ctx.message.delete()
+
 def setup(bot):
     bot.add_cog(Anime(bot))

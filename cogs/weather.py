@@ -1,7 +1,8 @@
+import os
+
 import urllib
 import datetime
 import json
-
 from pytz import timezone
 from discord.ext import commands
 import discord
