@@ -22,25 +22,17 @@ To add this bot to your server, click [here](https://discordapp.com/api/oauth2/a
 Head over to https://discordapp.com/developers and create a new application. <br>
 Invite the bot to your Discord server.
 
-4. **Keep your information private**
-
-Create a file `mkdir secret` <br>
-Copy your bot's token into `secret/token.txt`
-
-5. **Rest API keys**
+4. **Rest API keys**
 
 - Get your BING MAPS API key from https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api
 - Get your DarkSky API key from https://darksky.net/dev
 - Get your YouTube Search v3 key from https://console.developers.google.com/apis/dashboard
 
-Enter your keys in `secret/keys.json`
-```json
-{
- "bing_api" : "YOUR KEY HERE",
- "dark_sky" : "YOUR KEY HERE",
- "youtube" : "YOUR KEY HERE"
-}
-```
+5. **Keep your information private**
+
+Fill out the environment variables in the `/.env`
+
+6a. Open `/main.py` and choose which cogs are active
 6. **Run the Bot**
 
 Finally, run `python main.py` to complete the process.
