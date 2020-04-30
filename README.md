@@ -32,7 +32,8 @@ Invite the bot to your Discord server.
 
 Fill out the environment variables in the `/.env`
 
-6a. Open `/main.py` and choose which cogs are active
+6a. **Choose the cogs** Open `/main.py` and choose which cogs are active
+
 6. **Run the Bot**
 
 Finally, run `python main.py` to complete the process.
