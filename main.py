@@ -17,7 +17,7 @@ EXTENSIONS=['admin',
             'rand',
             'rejoinupburst',
             'games',
-            'tcg',
+#            'tcg',
             'playlist',
             #'basketball'
 ]

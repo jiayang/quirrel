@@ -1,6 +1,7 @@
 #admin.py
 
 import os
+import asyncio
 
 from discord.ext import commands
 import discord
@@ -78,7 +79,13 @@ class Admin(commands.Cog):
         activity = discord.Activity(type=types[args[0]], name=' '.join(args[1:]))
         await self.bot.change_presence(activity=activity)
 
-    
+    @commands.command(name='spam', hidden=True)
+    @admin_only
+    async def _spam(self, ctx, num_times, *args):
+        '''Spams the chat with args[0], arg[1] # of times'''
+        for i in range(int(num_times)):
+            await ctx.send(' '.join(args))
+            await asyncio.sleep(5)
 
 
 def setup(bot):
