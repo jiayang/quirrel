@@ -2,7 +2,18 @@ from discord.ext import commands
 import discord
 import asyncio
 
-SUPERUSERS = {178663053171228674: "blue", 166636618701209600: "blue", 172920250432487425: "red", 204363647370264586: "red", 218801604147544075: "blue", 198561020787032064: "red", 219937777096196097: "blue", 155861732550639617: "red", 208353857992916992: "red"} #gameboytre, jt, gren, skate, apple, cryp, irre, res, sound
+SUPERUSERS = {178663053171228674: "blue", #gameboytre
+              166636618701209600: "blue", #jt
+              172920250432487425: "red", #gren
+              204363647370264586: "red", #skate
+              218801604147544075: "blue", #apple
+              198561020787032064: "red", #cryp
+              219937777096196097: "blue", #irre
+              155861732550639617: "red", #res
+              208353857992916992: "red", #sound
+              166573846642688001: "blue" #pyro
+}
+
 class Rejoin(commands.Cog):
 
     def __init__(self, bot):
@@ -34,13 +45,14 @@ class Rejoin(commands.Cog):
         guild = member.guild
         if (guild.id == 166995343249113088):
             if (member.id in SUPERUSERS):
+                executive = guild.get_role(322836458371284993)
                 esteemedmember = guild.get_role(322834336976207872)
                 innerrole = None
                 if (SUPERUSERS[member.id] == 'blue'):
                     innerrole = guild.get_role(554522751231197205)
                 if (SUPERUSERS[member.id] == 'red'):
                     innerrole = guild.get_role(554514491384135680)
-                await member.edit(roles = [esteemedmember, innerrole])
+                await member.edit(roles = [executive, esteemedmember, innerrole])
     
         
         
