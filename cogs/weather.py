@@ -61,5 +61,5 @@ class Weather(commands.Cog):
     async def f_to_c(n):
         return str((float(n)- 32) * 5. / 9)
 
-    def setup(bot):
+def setup(bot):
     bot.add_cog(Weather(bot))
