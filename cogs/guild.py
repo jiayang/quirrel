@@ -51,7 +51,7 @@ class Guild(commands.Cog):
                 msgs_to_delete.append(msg)
                 nd += 1
         for msg_group in [msgs_to_delete[i:i + 100] for i in range(0, len(msgs_to_delete), 100)]:
-            await ctx.channel.delete_messages(set(msg_group))
+            await ctx.channel.delete_messages(msg_group)
         a = await ctx.send('_Woosh_ what {} messages were you talking about?'.format(amount))
         await asyncio.sleep(2)
         await a.delete()

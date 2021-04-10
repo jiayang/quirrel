@@ -97,9 +97,9 @@ class Survey(commands.Cog):
         del self.images[arg]
         ans = ''
         for iconname in self.images.keys():
-            s = ''.join([iconname, self.images[iconname]]) + '\n'
+            s = ','.join([iconname, self.images[iconname]]) + '\n'
             ans += s
-        f = open('data/surveybuilder.csv','w')
+        f = open('data/surveyimages.csv','w')
         f.write(ans)
         f.close()
         await ctx.message.delete()

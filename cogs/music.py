@@ -98,8 +98,8 @@ class Music(commands.Cog):
 
         #If the playlist exists for the selected server, just add the song to the playlist
         if voice not in self.queues:
-            self.queues[voice] = Playlist(self.bot, voice)
-
+            self.queues[voice] = Playlist(self.bot, ctx, voice)
+            
         #Get the first video playing, while the others download in the background
         self.queues[voice].add(urls[0])
 
@@ -179,10 +179,11 @@ class Music(commands.Cog):
 
 class Playlist:
 
-    def __init__(self,bot,voice):
+    def __init__(self,bot,ctx,voice):
         self.vc = voice
         self.loop = self.vc.loop
         self.bot = bot
+        self.ctx = ctx
         self.clear()
 
     #Adds the song's data to the queue, downloads the song if there are less than 5 songs left in the queue that are already downloaded
@@ -195,9 +196,13 @@ class Playlist:
         if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
             if 'downloaded' not in self.queue[self.last_queued + 1]:
                 if 'snippet' in self.queue[self.last_queued + 1] and 'resourceId' in self.queue[self.last_queued + 1]['snippet']:
-                    self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
+                    data = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
+                     
                 else:
-                    self.queue[self.last_queued+1] = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
+                    data = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
+
+                if data != None:
+                    self.queue[self.last_queued+1] = data
             self.last_queued += 1
 
     #Repeatedly play until the queue is out of songs
@@ -211,11 +216,26 @@ class Playlist:
             self.clear()
             return
 
-        data = self.queue.pop(0)
-        self.last_queued -= 1
-        targ = data['target']
-        self.now_playing = data
-        vc.play(discord.FFmpegPCMAudio(targ),
+        data = None
+        while data == None or 'downloaded' not in data:
+            if len(self.queue) == 0:
+                asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
+                asyncio.run_coroutine_threadsafe(vc.disconnect(), self.loop)
+                self.clear()
+                return
+            data = self.queue.pop(0)
+            self.last_queued -= 1
+            if 'downloaded' not in data:
+                print("Just tried to play a song but it wasn't good so I had to skip")
+                embed = discord.Embed(title=f"Skipped {data['title']}**", color = 32943)
+                embed.add_field(name='Sorry, for some reason I can not seem to download that video', value="Tag GameBoyTre to fix it :)")
+                embed.set_thumbnail(url=data['thumbnail'])
+                await self.ctx.send(embed=embed)
+
+        else:
+            targ = data['target']
+            self.now_playing = data
+            vc.play(discord.FFmpegPCMAudio(targ),
                     after= self.after)
 
         #If there are songs left to queue and not all the spots have already been taken, queue the song

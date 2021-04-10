@@ -1,3 +1,5 @@
+import random
+
 from discord.ext import commands
 import discord
 
@@ -22,9 +24,9 @@ class Games(commands.Cog):
 
 
     @commands.command(name='connect-four',)
-    async def _connectfour(self,ctx):
+    async def _connectfour(self,ctx, arg = '0'):
         '''Play a game of Connect Four!'''
-        a = Connect_Four(self.bot, ctx,self)
+        a = Connect_Four(self.bot, ctx, self, self.bot.get_user(id=int(arg.strip('!<@').strip('>'))))
         await a.setup()
         self.games[a.io.id] = a
 
@@ -33,7 +35,7 @@ class Games(commands.Cog):
         message = reaction.message
         if user.bot or message.id not in self.games:
             return
-        await self.games[message.id].next(reaction)
+        await self.games[message.id].next(user, reaction)
         await reaction.remove(user)
 
 
@@ -48,8 +50,11 @@ PIECE = {
 # 2 -> Red
 BASIS_VECTORS = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 
+def get_mention(user):
+    return user.mention if user is not None else "Undecided"
+
 class Connect_Four:
-    def __init__(self,bot,ctx,games):
+    def __init__(self,bot,ctx,games, other):
         self.bot = bot
         self.ctx = ctx
         self.games = games
@@ -59,8 +64,11 @@ class Connect_Four:
         self.embed = None
         self.embed_message = None
         self.turn = True #True is blue, False is red
+        self.usr1 = ctx.author
+        self.usr2 = other
 
     async def setup(self):
+        self.blue,self.red = (self.usr1,self.usr2) if random.random() > 0.5 else (self.usr2,self.usr1) 
         ctx = self.ctx
         for i in range(6):
             #Add the six rows of 7 pieces
@@ -80,13 +88,31 @@ class Connect_Four:
         #Embed for the UX
         embed = discord.Embed(title="**Connect Four: Blue's Turn**", color = 16744272)
         embed.set_author(name=self.bot.user.name, icon_url = self.bot.user.avatar_url)
-        embed.description = f"[Rules](http://www.boardgamecapital.com/connect-four-rules.htm) To place a piece, add a reaction to the corresponding column."
+        embed.description = "Blue: " + get_mention(self.blue) + "\nRed: " + get_mention(self.red) + "\n[Rules](http://www.boardgamecapital.com/connect-four-rules.htm) To place a piece, add a reaction to the corresponding column."
         embed.set_thumbnail(url='https://i.imgur.com/SIzZAzP.jpg')
         self.embed = embed
         self.embed_message = await ctx.send(embed=embed)
 
-    async def next(self,reaction):
+    async def next(self, user, reaction):
         '''A reaction is added to the interactive message'''
+        if self.turn:
+            if self.blue is None:
+                if self.red.id != user.id:
+                    self.blue = user
+                    self.embed.description = "Blue: " + get_mention(self.blue) + "\nRed: " + get_mention(self.red) + "\n[Rules](http://www.boardgamecapital.com/connect-four-rules.htm) To place a piece, add a reaction to the corresponding column."
+                else:
+                    return
+            elif self.blue.id != user.id:
+                return
+        else:
+            if self.red is None:
+                if self.blue.id != user.id:
+                    self.red = user
+                    self.embed.description = "Blue: " + get_mention(self.blue) + "\nRed: " + get_mention(self.red) + "\n[Rules](http://www.boardgamecapital.com/connect-four-rules.htm) To place a piece, add a reaction to the corresponding column."
+                else:
+                    return
+            elif self.red.id != user.id:
+                return
         n = REVERSE_DIGITS[reaction.emoji] #The number represented by the rxn
         place = None #Figure out which place the new piece should go
         for i in range(6):
@@ -155,18 +181,6 @@ class Connect_Four:
     def print_board(self):
         l = [str(e) for e in self.board]
         print('\n'.join(l) + '\n')
-
-
-
-
-
-
-
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Games(bot))

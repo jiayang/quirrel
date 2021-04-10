@@ -19,11 +19,6 @@ class Admin(commands.Cog):
     @admin_only
     async def _reload(self, ctx, module : str, pull = ''):
         """Reloads a module."""
-        if pull == '-p':
-            g = git.cmd.Git('.')
-            g.pull()
-            print('Pulled from git')
-            await ctx.send('Successfully pulled from git')
         try:
             self.bot.unload_extension('cogs.' + module)
             self.bot.load_extension('cogs.' + module)
@@ -38,11 +33,6 @@ class Admin(commands.Cog):
     @admin_only
     async def _load(self, ctx, module : str, pull = ''):
         """Loads a module."""
-        if pull == '-p':
-            g = git.cmd.Git('.')
-            g.pull()
-            print('Pulled from git')
-            await ctx.send('Successfully pulled from git')
         try:
             self.bot.load_extension('cogs.' + module)
         except Exception as e:
@@ -78,15 +68,6 @@ class Admin(commands.Cog):
         }
         activity = discord.Activity(type=types[args[0]], name=' '.join(args[1:]))
         await self.bot.change_presence(activity=activity)
-
-    @commands.command(name='spam', hidden=True)
-    @admin_only
-    async def _spam(self, ctx, num_times, *args):
-        '''Spams the chat with args[0], arg[1] # of times'''
-        for i in range(int(num_times)):
-            await ctx.send(' '.join(args))
-            await asyncio.sleep(5)
-
 
 def setup(bot):
     bot.add_cog(Admin(bot))

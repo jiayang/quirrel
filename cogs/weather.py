@@ -47,6 +47,7 @@ class Weather(commands.Cog):
         except Exception as e:
             await ctx.send('Error: Please provide a correct location. Usage: !weather {location}')
             print(e)
+
     async def format(data,loc_name,time,ctx):
         embed = discord.Embed(title="**{} at {}**".format(loc_name,time.strftime("%I:%M %p")), color = 16744272)
         embed.set_author(name=ctx.author.name)
@@ -56,7 +57,9 @@ class Weather(commands.Cog):
                                                         ICONS[data['icon']][0],
                                                         data['summary'])
         return embed
+
     async def f_to_c(n):
         return str((float(n)- 32) * 5. / 9)
-def setup(bot):
+
+    def setup(bot):
     bot.add_cog(Weather(bot))

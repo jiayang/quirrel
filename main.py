@@ -8,22 +8,23 @@ from discord.ext import commands
 
 EXTENSIONS=['admin',
             'anime',
-            #'christmas',
             'guild',
             'music',
             'survey',
-            'upburst',
             'weather',
             'rand',
             'rejoinupburst',
             'games',
 #            'tcg',
             'playlist',
-            #'basketball'
+            'basketball'
 ]
-bot = commands.Bot(command_prefix='!')
-token = os.getenv("DISCORD_SECRET_TOKEN")
 
+intents = discord.Intents.default()
+intents.members = True
+
+bot = commands.Bot(command_prefix='!', intents=intents)
+token = os.getenv("DISCORD_SECRET_TOKEN")
 
 @bot.event
 async def on_ready():

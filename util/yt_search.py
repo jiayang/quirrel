@@ -4,8 +4,11 @@ import urllib
 import json
 from pathlib import Path
 
-import youtube_dl
+import youtube_dlc
+import glob
+import html
 
+MAX_ALLOCATION = int(os.getenv("MAX_SONG_CACHE_ALLOCATION")) * 1024 * 1024 * 1024
 
 YT_VIDEO_API = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q={}&key={}"
 YT_PLAYLIST_API = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&id={}&key={}"
@@ -67,7 +70,7 @@ def download_info(urls):
 
     #If it has just one entry (request was a single video), return that video's info
     if len(urls) == 1:
-        data['title'] = urls[0]['snippet']['title'].replace("&quot;",'"');
+        data['title'] = html.unescape(urls[0]['snippet']['title'])
         data['link'] = YT_VIDEO_BASE.format(urls[0]['id']['videoId'])
         data['thumbnail'] = urls[0]['snippet']['thumbnails']['default']['url']
     elif len(urls) > 1:
@@ -75,7 +78,7 @@ def download_info(urls):
         pid = urls[0]['snippet']['playlistId']
         playlist_url = YT_PLAYLIST_API.format(pid,YT_KEY)
         playlist = json.loads(urllib.request.urlopen(playlist_url).read())
-        data['title'] = playlist['items'][0]['snippet']['title']
+        data['title'] = html.unescape(playlist['items'][0]['snippet']['title'])
         data['link'] = YT_PLAYLIST_BASE.format(pid)
         data['thumbnail'] = playlist['items'][0]['snippet']['thumbnails']['default']['url']
 
@@ -91,7 +94,7 @@ def download(vid):
     url = YT_VIDEO_BASE.format(vid)
     data = {}
     try:
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+        with youtube_dlc.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
 
@@ -103,11 +106,21 @@ def download(vid):
 
             #Only download if it doesn't already exist
             if not config.is_file():
+                #If the folder is too full
+                songs = Path("songs")
+                files = glob.glob("songs/*")
+                n = sum(os.stat(f).st_size for f in files)
+                if n > MAX_ALLOCATION:
+                    print("Currently deleting songs in cache")
+                    files.sort(key=os.path.getmtime, reverse=True)
+                    for i in range(len(files)//2):
+                        os.remove(files[i])
+    
                 ydl.download([url])
 
             data['target'] = targ
             data['url'] = url
-            data['title'] = info['title']
+            data['title'] = html.unescape(info['title'])
             data['thumbnail'] = info['thumbnails'][0]['url']
             data['downloaded'] = True
 
