@@ -17,7 +17,8 @@ EXTENSIONS=['admin',
             'games',
 #            'tcg',
             'playlist',
-            'basketball'
+            'basketball',
+            'image'
 ]
 
 intents = discord.Intents.default()

@@ -17,11 +17,14 @@ class Image(commands.Cog):
             await ctx.send('Error, you need to give a keyword that you added with **!a [keyword]**')
         key = " ".join(args)
         payload = {
-            'uid': ctx.author.id,
+            'uid': 1024,
             'key': key
         }
         r = requests.get('https://img.jiayang.dev/search/', params=payload)
-        await ctx.send(r.text)
+        if r.status_code == 400:
+            await ctx.send('Error, something went wrong. Try again later')
+        else:
+            await ctx.send(r.text)
         await ctx.message.delete()
 
     @commands.command(name='add', aliases=['a'])
@@ -32,13 +35,24 @@ class Image(commands.Cog):
             return
         key = " ".join(args)
         garbage = []
-        response = await dio.prompt(ctx, "**Enter the image**", garbage)
-        await ctx.channel.delete_messages(garbage)
-        payload = {'uid': ctx.author.id,
+        try:
+            response = await dio.prompt(ctx, "**Enter the image**", garbage)
+            await ctx.channel.delete_messages(garbage)
+        except:
+            await ctx.message.delete()
+            return
+        link = response.content
+        if (link == ""):
+            link = response.attachments[0].url
+        payload = {'uid': 1024,
                    'key': key,
-                   'link': response.content
+                   'link': link
                    }
-        requests.post('https://img.jiayang.dev/add/', params=payload)
+        r = requests.post('https://img.jiayang.dev/add/', params=payload)
+        if r.status_code == 400:
+            await ctx.send('Error, to properly use type !add [keyword]')
+        if r.status_code == 401:
+            await ctx.send('That keyword already exists. Use another')
         await ctx.message.delete()
         
 def setup(bot):
