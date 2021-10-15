@@ -4,7 +4,7 @@ import discord
 from util import SurveyBuilder
 
 DIGITS = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣','0⃣']
-VERIFIED = ['default','halloween']
+VERIFIED = ['default','halloween','christmas','frozen','halloween2','valentines']
 class Survey(commands.Cog):
 
     def __init__(self, bot):
@@ -79,15 +79,14 @@ class Survey(commands.Cog):
         user = ctx.author
         if user.id not in {166573846642688001: "Pyro", 208353857992916992: "Sound", 178663053171228674: "gbt"}:
             return
-        ans = ''
-        #print(self.images)
+        
         for iconname in self.images.keys():
             #print(iconname)
             s = '\n'.join([iconname, self.images[iconname]]) + '\n'
-            ans += s
-        await ctx.message.delete()
-        await ctx.send(ans) 
+            await ctx.send(s) 
 
+        await ctx.message.delete()
+        
     @commands.command(name='delicon', hidden=True)
     async def _deleteicon(self,ctx,arg):
         if arg in VERIFIED:

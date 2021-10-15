@@ -1,6 +1,7 @@
 import random
 
 import asyncio
+import threading
 from discord.ext import commands
 from discord import opus
 from discord.ext.commands import Bot
@@ -61,7 +62,7 @@ class Music(commands.Cog):
         if client != None:
             await client.disconnect()
             if client in self.queues:
-                self.queues[client].clear()
+                self.queues[client].stop()
         await ctx.message.delete()
 
     @commands.command(name='play',)
@@ -134,28 +135,30 @@ class Music(commands.Cog):
 
         playlist = self.queues[voice]
 
-        if len(playlist.queue) == 0 and not playlist.vc.is_playing():
+        if len(playlist.queue) + len(playlist.downloaded) == 0 and not playlist.vc.is_playing():
             await ctx.send('There is nothing in the queue')
             return
 
         #Format the embed for FANCY return
         s = ''
         i = 0
-        while i < len(playlist.queue):
+        total = playlist.downloaded + playlist.queue
+        while i < len(total):
             name = ''
-            if playlist.queue[i] == None:
-                playlist.queue.pop(i)
+            if total[i] == None:
+                total.pop(i)
                 continue
-            if 'title' in playlist.queue[i]:
-                name = playlist.queue[i]['title']
+            if 'title' in total[i]:
+                name = total[i]['title']
             else:
-                name = playlist.queue[i]['snippet']['title']
+                name = total[i]['snippet']['title']
             s += f"**{i+1}**. {name}\n"
-            if i == 19 or len(s) > 900:
-                l = len(playlist.queue) - i
+            if i == 10 or len(s) > 900:
+                l = len(total) - i
                 s += f'And {l} more...'
                 break
             i += 1
+        
         s.replace('_','\_')
         embed = discord.Embed(title=f"Current Queue For **{ctx.guild.name}**", color = 16744272)
         if playlist.vc.is_playing():
@@ -185,83 +188,104 @@ class Playlist:
         self.bot = bot
         self.ctx = ctx
         self.clear()
+        self.dl_thread = threading.Thread(target=self.download)
+        self.running = True
+        self.lock = threading.Lock()
+        self.dl_thread.start()
 
     #Adds the song's data to the queue, downloads the song if there are less than 5 songs left in the queue that are already downloaded
     def add(self,data):
-        self.queue += [data]
-        self.attempt_download()
-
+        self.queue.append(data)
+         
     #Attempts to download the song
-    def attempt_download(self):
-        if self.last_queued < 4 and len(self.queue) > self.last_queued + 1:
-            if 'downloaded' not in self.queue[self.last_queued + 1]:
-                if 'snippet' in self.queue[self.last_queued + 1] and 'resourceId' in self.queue[self.last_queued + 1]['snippet']:
-                    data = yt_search.download(self.queue[self.last_queued+1]['snippet']['resourceId']['videoId'])
-                     
-                else:
-                    data = yt_search.download(self.queue[self.last_queued+1]['id']['videoId'])
+    def download(self):
+        try:
+            while self.running:
+                if len(self.queue) > 0 and len(self.downloaded) < 5:
+                    self.lock.acquire()
+                    to_download = self.queue.pop(0)
+                    self.lock.release()
+                    self.shuffled = False
+                    if 'downloaded' in to_download:
+                        self.lock.acquire()
+                        self.downloaded.append(data)
+                        self.lock.release()
+                        continue
 
-                if data != None:
-                    self.queue[self.last_queued+1] = data
-            self.last_queued += 1
+                    if 'snippet' in to_download and 'resourceId' in to_download['snippet']:
+                        data = yt_search.download(to_download['snippet']['resourceId']['videoId']) 
+                    else:
+                        data = yt_search.download(to_download['id']['videoId'])
 
+                    if data != None:
+                        self.lock.acquire()
+                        if self.shuffled:
+                            self.queue.append(data)
+                        else:
+                            self.downloaded.append(data)
+                        self.lock.release()
+        except:
+            pass
     #Repeatedly play until the queue is out of songs
     async def play(self):
         vc = self.vc
 
         #Nothing left
-        if self.last_queued == -1:
-            asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
-            asyncio.run_coroutine_threadsafe(vc.disconnect(), self.loop)
-            self.clear()
+        if len(self.queue) + len(self.downloaded) == 0:
+            self.lock.release()
+            self.stop()
             return
 
-        data = None
-        while data == None or 'downloaded' not in data:
-            if len(self.queue) == 0:
-                asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
-                asyncio.run_coroutine_threadsafe(vc.disconnect(), self.loop)
-                self.clear()
-                return
-            data = self.queue.pop(0)
-            self.last_queued -= 1
-            if 'downloaded' not in data:
-                print("Just tried to play a song but it wasn't good so I had to skip")
-                embed = discord.Embed(title=f"Skipped {data['title']}**", color = 32943)
-                embed.add_field(name='Sorry, for some reason I can not seem to download that video', value="Tag GameBoyTre to fix it :)")
-                embed.set_thumbnail(url=data['thumbnail'])
-                await self.ctx.send(embed=embed)
+        while len(self.downloaded) == 0:
+            continue
 
-        else:
+        data = None
+        while data == None:
+            if len(self.downloaded) == 0:
+                self.stop()
+                return
+            self.lock.acquire()
+            data = self.downloaded.pop(0)
+            self.lock.release()
+        else:        
             targ = data['target']
             self.now_playing = data
+        
             vc.play(discord.FFmpegPCMAudio(targ),
                     after= self.after)
-
-        #If there are songs left to queue and not all the spots have already been taken, queue the song
-        self.attempt_download()
+            
 
     #Wait a few ms before playing the next song - prevents abrupt transitions
     def after(self,e):
         if len(self.vc.channel.members) == 1:
-            asyncio.run_coroutine_threadsafe(self.vc.disconnect(), self.loop)
+            self.stop()
             return
+
         asyncio.run_coroutine_threadsafe(asyncio.sleep(50), self.loop)
         asyncio.run_coroutine_threadsafe(self.play(), self.loop)
 
     #Shuffles the queue
     async def shuffle(self,ctx):
+        self.lock.acquire()
+        self.shuffled = True
+        self.queue = self.queue + self.downloaded
+        self.downloaded = []
         random.shuffle(self.queue)
+        self.lock.release()
         await ctx.send('**Shuffled** the queue, enjoy!')
-        self.last_queued = -1
-        for i in range(5):
-            self.attempt_download()
-
+        
+        
     #Clears everything for future use
     def clear(self):
         self.queue = []
+        self.downloaded = []
         self.now_playing = ''
-        self.last_queued = -1
+    
+    def stop(self):
+        self.clear()
+        self.running = False
+        asyncio.run_coroutine_threadsafe(asyncio.sleep(15), self.loop)
+        asyncio.run_coroutine_threadsafe(self.vc.disconnect(), self.loop)
 
     #Skips the currently playing by just calling stop
     async def skip(self,ctx):

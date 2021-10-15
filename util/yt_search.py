@@ -3,8 +3,9 @@ import os
 import urllib
 import json
 from pathlib import Path
+import datetime
 
-import youtube_dlc
+import yt_dlp
 import glob
 import html
 
@@ -18,7 +19,7 @@ YT_PLAYLIST_BASE = 'https://www.youtube.com/playlist?list={}'
 YT_KEY = os.getenv("YOUTUBE_API_KEY")
 YT_VIDEO_BASE = 'https://www.youtube.com/watch?v={}'
 YDL_OPTIONS = {
-    'quiet': True,
+    'quiet' : True,
     'format': 'bestaudio/best',
     'outtmpl': 'songs/%(id)s.%(ext)s',
     'postprocessors': [{
@@ -94,7 +95,7 @@ def download(vid):
     url = YT_VIDEO_BASE.format(vid)
     data = {}
     try:
-        with youtube_dlc.YoutubeDL(YDL_OPTIONS) as ydl:
+        with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download=False)
             download_target = ydl.prepare_filename(info)
 
@@ -112,7 +113,7 @@ def download(vid):
                 n = sum(os.stat(f).st_size for f in files)
                 if n > MAX_ALLOCATION:
                     print("Currently deleting songs in cache")
-                    files.sort(key=os.path.getmtime, reverse=True)
+                    files.sort(key=os.path.getmtime)
                     for i in range(len(files)//2):
                         os.remove(files[i])
     
@@ -123,9 +124,8 @@ def download(vid):
             data['title'] = html.unescape(info['title'])
             data['thumbnail'] = info['thumbnails'][0]['url']
             data['downloaded'] = True
-
-            #DIAGNOSTIC print statements (WOOHOO)
-            print(f'Downloading: {info["title"]}')
+            time = datetime.datetime.now().timestamp()
+            os.utime(targ, (time, time))
             return data
     except:
         return None

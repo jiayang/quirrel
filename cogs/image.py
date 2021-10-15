@@ -5,11 +5,14 @@ import discord
 import asyncio
 import requests
 
+import os
+
 class Image(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-
+        self.IMGUR_KEY = os.getenv("IMGUR_CLIENT_ID")
+        print(self.IMGUR_KEY)
     def fetch(key):
         payload = {
             'uid': 1024,
@@ -39,7 +42,17 @@ class Image(commands.Cog):
             return
         link = response.content
         if (link == ""):
-            link = response.attachments[0].url
+            discord_cdn_link = response.attachments[0].url
+            url = "https://api.imgur.com/3/image"
+            headers = {"Authorization": "Client-ID {}".format(self.IMGUR_KEY)}
+            data = {"type": "URL", "image": discord_cdn_link}
+            r = requests.post(url, headers=headers, data=data)
+            if r.status_code != 200:
+                await ctx.send(r.text)
+                await ctx.send("Error: Could not upload that image to Imgur")
+                return
+            link = r.json()["data"]["link"]
+            
         payload = {'uid': 1024,
                    'key': key,
                    'link': link
@@ -74,7 +87,7 @@ class Image(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, msg):
         '''If the message begins with ; , try to use the emote/whatever is associated'''
-        if msg.content[0] == ';':
+        if msg.content != '' and msg.content[0] == ';':
             key = msg.content[1:]
             r = Image.fetch(key)
             if r.status_code == 200:

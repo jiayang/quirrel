@@ -27,9 +27,6 @@ class Rejoin(commands.Cog):
     async def on_member_remove(self, member):
         guild = member.guild
         if (guild.id == 166995343249113088):
-            f = open("data/leave.txt", 'a')
-            f.write(f'{member.id} left\n')
-            f.close()
             if (member.id in SUPERUSERS):
                 channel = guild.get_channel(556513668125163538)
                 invite = await channel.create_invite(max_uses = 1)
@@ -46,7 +43,10 @@ class Rejoin(commands.Cog):
                     await user.send(content="Hello! I don't know why you got **kicked** or **left**, but if you ever want to rejoin, here you go!")
                     
                 await user.send(content=invite)
-            
+                f = open("data/leave.txt", 'a')
+                f.write(f'Created invite for {member.display_name}. The invite is ' + invite.url + '\n')
+                f.close()
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
 
