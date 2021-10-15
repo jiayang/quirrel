@@ -28,7 +28,7 @@ six==1.13.0
 smmap==3.0.2
 soupsieve==1.9.5
 typing-extensions==3.7.4.2
-urllib3==1.25.9
+urllib3==1.26.5
 websockets==8.1
 yarl==1.4.2
 youtube-dl==2021.6.6
